@@ -118,8 +118,12 @@ int main (const int argc, const char * const argv[]) {
 	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);
 	
 //TODO *************
-	//initDecryptEngine(zipFilePathname);
+	initDecryptEngine(zipFilePathname);
 	
+	// Listen (non-blocking) for a signal from another process in case it found the solution
+	int solutionFoundByRank = -1;
+	MPI_Request mpi_request;
+	MPI_Irecv(&solutionFoundByRank, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &mpi_request);
 	
 	bool attemptSuccessful = false;
 	string password;
@@ -128,29 +132,45 @@ int main (const int argc, const char * const argv[]) {
 
 		attemptSuccessful = attemptPassword(password);
 		
-		if(!attemptSuccessful && ) {
+		if(!attemptSuccessful) {
 			// Non-blocking check to see if another process has sent a signal that if found the solution :)
-			// TODO if I didn't find it mark	attemptSuccessful = false;
-			// 	also record rank of process that did find solution and log the rank
+			int receivedFlag = 0;
+			MPI_Test(&mpi_request, &receivedFlag, MPI_STATUS_IGNORE);
+			
+			if(receivedFlag) {
+				// solutionFoundByRank has been filled in
+				log->log(string("Another process with rank ") + to_string(solutionFoundByRank) + " has found the solution");
+				break;
+			}
 		}
 	}
 	
 
 	// Record the final result
 	if(attemptSuccessful) {
-		log.log("Found the solution of '" + password + "'");
+		log->log("Found the solution of '" + password + "'");
 	
-		log.log("Notifying all other processes that I found the solution");
+		log->log("Notifying all other processes that I found the solution");
 		
-		// TODO Tell other processes that I found the solution
+		// Tell all other processes that I found the solution
+		for(int i = 0; i < GLOBAL_mpiRuntimeInfo->mpi_num_proc; i++) {
+			if(GLOBAL_mpiRuntimeInfo->mpi_rank == i) {
+				continue;  // No point in talking to self
+			}
+			
+			// Use non-blocking send since it is possible that some processes have already exited because they tried
+			//	all the possible solutions and didn't find one.
+			MPI_isend(GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_REQUEST_IGNORE);
+		}
 	} else {
-		log.log("Didn't find the solution");
+		log->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
 	}
 		
 	
-	log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
+	log->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	
 	// Clean up memory and MPI and exit
+	MPI_Request_free(mpi_request);
 	delete(log);
 	delete(GLOBAL_mpiRuntimeInfo);
 	MPI_Finalize();
