@@ -3,7 +3,7 @@ LDFLAGS=-L/contrib/bgl/mpe2/lib -llmpe -lmpe
 
 
 all:
-	mpxlC ${CXXFLAGS} *.cpp -o pzapr.bin ${LDFLAGS}
+	mpxlC ${CXXFLAGS} main.cpp -o pzapr.bin ${LDFLAGS}
 	
 	ls -la --full-time --color
 	

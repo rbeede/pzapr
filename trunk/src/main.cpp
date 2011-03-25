@@ -47,6 +47,33 @@ string makeValidFilename(const string origString) {
 
 
 /*
+ * isBruteForce decides which init function will be called
+ * rank is the zero-indexed rank
+ * numProcesses is the number of processes (starting at 1)
+ * dictionaryFilePathname Set to NULL if using isBruteForce, otherwise the path to the file
+ * 
+*/
+void initializePasswordGenerator(const bool isBruteForce, const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
+	if(isBruteForce) {
+		initializePasswordGenerator_isBruteForce(rank, numProcesses);
+	} else {
+//TODO ***************
+		//initializePasswordGenerator_dictionary(rank, numProcesses, dictionaryFilePathname);
+	}
+}
+
+
+string getNextPassword(const bool isBruteForce) {
+	if(isBruteForce) {
+		return getNextPassword_brute();
+	} else {
+//TODO **************
+		//return getNextPassword_dictionary();
+	}
+}
+
+
+/*
  * argc - Length of argv
  * argv - Array of length argc that holds passed in arguments
  * 			Element at position argv[0] is usually the path (relative or absolute) to the binary executable for this
@@ -71,10 +98,10 @@ int main (const int argc, const char * const argv[]) {
 
 	const char * const logFileBasePathname = argv[1];
 	const char * const zipFilePathname = argv[2];
-	const bool bruteForce = ('B' == argv[3][0]);
-	const char * const dictionaryFilePathname = (bruteForce && argc > 4) ? argv[4] : NULL;
+	const bool isBruteForce = ('B' == argv[3][0]);
+	const char * const dictionaryFilePathname = (isBruteForce && argc > 4) ? argv[4] : NULL;
 
-	if(!bruteForce && NULL == dictionaryFilePathname) {
+	if(!isBruteForce && NULL == dictionaryFilePathname) {
 		cerr << "Missing dictionary file pathname argument!" << endl;
 		MPI_Finalize();
 		return 0;
@@ -88,9 +115,40 @@ int main (const int argc, const char * const argv[]) {
 	log->log(to_string(GLOBAL_mpiRuntimeInfo->mpi_processor_name) + " rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " of " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
 
 	
+	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);
 	
-//TODO more code here
+//TODO *************
+	//initDecryptEngine(zipFilePathname);
 	
+	
+	bool attemptSuccessful = false;
+	string password;
+	while(!attemptSuccessful) {
+		password = getNextPassword(isBruteForce);
+
+		attemptSuccessful = attemptPassword(password);
+		
+		if(!attemptSuccessful && ) {
+			// Non-blocking check to see if another process has sent a signal that if found the solution :)
+			// TODO if I didn't find it mark	attemptSuccessful = false;
+			// 	also record rank of process that did find solution and log the rank
+		}
+	}
+	
+
+	// Record the final result
+	if(attemptSuccessful) {
+		log.log("Found the solution of '" + password + "'");
+	
+		log.log("Notifying all other processes that I found the solution");
+		
+		// TODO Tell other processes that I found the solution
+	} else {
+		log.log("Didn't find the solution");
+	}
+		
+	
+	log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	
 	// Clean up memory and MPI and exit
 	delete(log);
