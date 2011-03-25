@@ -2,7 +2,7 @@ CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK
 
 
 all: 
-	mpicxx -Wall ${CXXFLAGS} *.cpp -o `basename "$(CURDIR)"`.bin
+	mpicxx -Wall ${CXXFLAGS} main.cpp -o pzapr.bin
 	ls -la --full-time --color
 	
 clean:

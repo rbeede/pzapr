@@ -1,9 +1,9 @@
 CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK -I/contrib/bgl/mpe2/include
-LDFLAGS = -L/contrib/bgl/mpe2/lib -llmpe -lmpe
+LDFLAGS=-L/contrib/bgl/mpe2/lib -llmpe -lmpe
 
 
 all:
-	mpxlC  ${CXXFLAGS}  *.cpp -o `basename "$(CURDIR)"`.bin ${LDFLAGS}
+	mpxlC ${CXXFLAGS} *.cpp -o pzapr.bin ${LDFLAGS}
 	
 	ls -la --full-time --color
 	
