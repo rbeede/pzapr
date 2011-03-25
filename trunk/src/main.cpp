@@ -25,6 +25,9 @@
 #include "stringutils.h"
 #include "mpi_support.h"  // defines constant global GLOBAL_mpiRuntimeInfo
 
+#include "alphanumeric.h"
+#include "decryptzip.h"
+
 using namespace std;
 
 extern char **environ;  // May change if you modify the environment in your code
@@ -69,6 +72,7 @@ string getNextPassword(const bool isBruteForce) {
 	} else {
 //TODO **************
 		//return getNextPassword_dictionary();
+		return NULL;
 	}
 }
 
@@ -160,7 +164,7 @@ int main (const int argc, const char * const argv[]) {
 			
 			// Use non-blocking send since it is possible that some processes have already exited because they tried
 			//	all the possible solutions and didn't find one.
-			MPI_isend(GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_REQUEST_IGNORE);
+			MPI_Isend((void *) &GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, NULL);
 		}
 	} else {
 		log->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
@@ -170,7 +174,7 @@ int main (const int argc, const char * const argv[]) {
 	log->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	
 	// Clean up memory and MPI and exit
-	MPI_Request_free(mpi_request);
+	MPI_Request_free(&mpi_request);
 	delete(log);
 	delete(GLOBAL_mpiRuntimeInfo);
 	MPI_Finalize();
