@@ -1,0 +1,15 @@
+#summary How to run
+
+You need a system with an implementation of MPI.  OpenMPI works along with pretty much any other.  You'll also need a decently modern C++ compiler.  Standard C/C++ libraries are used in the code.  Your build system also needs the MPI libraries in order to build.
+
+Makefiles are provided in the source.
+
+If using a supercomputer system refer to the specific scheduler run instructions.  You'll probably want to include the job id as part of the log filename with something like:
+
+{{{mpirun -n 64 $SCRATCH/pzapr.bin $SCRATCH/${COBALT_LOG}-pzapr_encrypted_file__ $SCRATCH/encrypted_file.zip BRUTE}}}
+
+which would result (depending on the system) in log files like:
+ * 54301-pzapr_encrypted_file__SysHostname_1_0_0_0-mesh_rank0of64.log
+ * 54301-pzapr_encrypted_file__SysHostname_1_0_0_0-mesh_rank1of64.log
+ * 54301-pzapr_encrypted_file__SysHostname_1_0_0_0-mesh_rank2of64.log
+ * ...
