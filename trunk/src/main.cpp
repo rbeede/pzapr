@@ -58,7 +58,7 @@ string makeValidFilename(const string origString) {
 */
 void initializePasswordGenerator(const bool isBruteForce, const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
 	if(isBruteForce) {
-		initializePasswordGenerator_isBruteForce(rank, numProcesses);
+		initializePasswordGenerator_brute(rank, numProcesses);
 	} else {
 //TODO ***************
 		//initializePasswordGenerator_dictionary(rank, numProcesses, dictionaryFilePathname);
@@ -66,13 +66,13 @@ void initializePasswordGenerator(const bool isBruteForce, const int rank, const 
 }
 
 
-string getNextPassword(const bool isBruteForce) {
+std::string getNextPassword(const bool isBruteForce) {
 	if(isBruteForce) {
 		return getNextPassword_brute();
 	} else {
 //TODO **************
 		//return getNextPassword_dictionary();
-		return NULL;
+		return string("");
 	}
 }
 
@@ -121,8 +121,8 @@ int main (const int argc, const char * const argv[]) {
 	
 	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);
 	
-//TODO *************
 	initDecryptEngine(zipFilePathname);
+
 	
 	// Listen (non-blocking) for a signal from another process in case it found the solution
 	int solutionFoundByRank = -1;
@@ -133,6 +133,11 @@ int main (const int argc, const char * const argv[]) {
 	string password;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
+		
+		if(password == string("")) {
+			log->log("Ran out of passwords to try");
+			break;
+		}
 
 		attemptSuccessful = attemptPassword(password);
 		

@@ -8,10 +8,8 @@
 
 #include <string>
 
-using namespace std;
-
-void initializePasswordGenerator_isBruteForce(const int rank, const int numProcesses);
-string getNextPassword_brute();
+void initializePasswordGenerator_brute(const int rank, const int numProcesses);
+std::string getNextPassword_brute();
 
 
 #endif /* _ALPHANUMERIC_H */
