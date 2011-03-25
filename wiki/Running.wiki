@@ -9,7 +9,7 @@ If using a supercomputer system refer to the specific scheduler run instructions
 {{{mpirun -n 64 $SCRATCH/pzapr.bin $SCRATCH/${COBALT_LOG}-pzapr_encrypted_file__ $SCRATCH/encrypted_file.zip BRUTE}}}
 
 which would result (depending on the system) in log files like:
- * 54301-pzapr_encrypted_file__SysHostname`_`1_0_0_0-mesh_rank0of64.log
- * 54301-pzapr_encrypted_file__SysHostname`_`1_0_0_0-mesh_rank1of64.log
- * 54301-pzapr_encrypted_file__SysHostname`_`1_0_0_0-mesh_rank2of64.log
+ * 54301-pzapr_encrypted_file__`SysHostname`_1_0_0_0-mesh_rank0of64.log
+ * 54301-pzapr_encrypted_file__`SysHostname`_1_0_0_0-mesh_rank1of64.log
+ * 54301-pzapr_encrypted_file__`SysHostname`_1_0_0_0-mesh_rank2of64.log
  * ...
