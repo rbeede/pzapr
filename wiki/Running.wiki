@@ -6,7 +6,7 @@ Makefiles are provided in the source.
 
 If using a supercomputer system refer to the specific scheduler run instructions.  You'll probably want to include the job id as part of the log filename with something like:
 
-{{{mpirun -n 64 $SCRATCH/pzapr.bin $SCRATCH/${COBALT_LOG}-pzapr_encrypted_file__ $SCRATCH/encrypted_file.zip BRUTE}}}
+{{{mpirun -n 64 $SCRATCH/pzapr.bin $SCRATCH/${COBALT_JOBID}-pzapr_encrypted_file__ $SCRATCH/encrypted_file.zip BRUTE}}}
 
 which would result (depending on the system) in log files like:
  * {{{54301-pzapr_encrypted_file__SysHostname_1_0_0_0-mesh_rank0of64.log}}}
