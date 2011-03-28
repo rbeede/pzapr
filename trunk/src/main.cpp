@@ -26,6 +26,7 @@
 #include "mpi_support.h"  // defines constant global GLOBAL_mpiRuntimeInfo
 
 #include "alphanumeric.h"
+#include "dictionary.h"
 #include "decryptzip.h"
 
 using namespace std;
@@ -60,8 +61,7 @@ void initializePasswordGenerator(const bool isBruteForce, const int rank, const 
 	if(isBruteForce) {
 		initializePasswordGenerator_brute(rank, numProcesses);
 	} else {
-//TODO ***************
-		//initializePasswordGenerator_dictionary(rank, numProcesses, dictionaryFilePathname);
+		initializePasswordGenerator_dictionary(rank, numProcesses, dictionaryFilePathname);
 	}
 }
 
@@ -70,9 +70,7 @@ std::string getNextPassword(const bool isBruteForce) {
 	if(isBruteForce) {
 		return getNextPassword_brute();
 	} else {
-//TODO **************
-		//return getNextPassword_dictionary();
-		return string("");
+		return getNextPassword_dictionary();
 	}
 }
 
