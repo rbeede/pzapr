@@ -1,5 +1,8 @@
 #include "decryptzip.h"  // Only include, all others should be in the .h file
 
+
+extern Logger * log;
+
 // Global variables that should only be used by decryptzip
 char * zipfileBytes;
 
@@ -25,8 +28,10 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		// close the file
 		zipfileStream.close();
 	}
-	else 
-		std::cout<< "Unable to open the file";
+	else {
+		log.log("Unable to open the zip file");
+		//TODO mpi abort call
+	}
 }
 
 bool attemptPassword(const std::string password) {
