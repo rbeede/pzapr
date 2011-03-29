@@ -8,6 +8,7 @@
 
 #include <string>
 #include <fstream>
+#include <iostream>
 
 void initDecryptEngine(const char * const zipFilePathname);
 

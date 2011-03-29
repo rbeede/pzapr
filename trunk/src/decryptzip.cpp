@@ -1,23 +1,32 @@
 #include "decryptzip.h"  // Only include, all others should be in the .h file
 
-
 // Global variables that should only be used by decryptzip
-unsigned char * zipfileBytes;
-
+char * zipfileBytes;
 
 void initDecryptEngine(const char * const zipFilePathname) {
-	//TODO read in zip file and store content in global variable
+	//read in zip file and store content in global variable	
+	std::fstream zipfileStream;
+	zipfileStream.open(zipFilePathname);
 	
-	std::ifstream zipfileStream;
+	//get byte size of zip file
+	if(zipfileStream.is_open())
+	{
+		long sizeofzip;
+		zipfileStream.seekg(0,std::ios::end);
+		sizeofzip = zipfileStream.tellg();
+		zipfileStream.seekg(0,std::ios::beg);
+
+		//zipfileBytes = new unsigned char[SIZE OF ZIP];
+		zipfileBytes = new char[sizeofzip];
 	
-	//TODO get byte size of zip file
-	
-	//TODO zipfileBytes = new unsigned char[SIZE OF ZIP];
-	
-	//TODO read in zip file into memory
-	
-	//TODO close the file
-	
+		//read in zip file into memory
+		zipfileStream.read(zipfileBytes,sizeofzip);
+
+		// close the file
+		zipfileStream.close();
+	}
+	else 
+		std::cout<< "Unable to open the file";
 }
 
 bool attemptPassword(const std::string password) {
