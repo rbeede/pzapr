@@ -12,7 +12,7 @@ void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
 
 
 std::string getNextPassword_brute() {
-	const string currValue = currPassword_ALPHANUMERIC;
+	const std::string currValue = currPassword_ALPHANUMERIC;
 	
 	// Increment for next time around
 	incrementPassword();
@@ -24,11 +24,11 @@ std::string getNextPassword_brute() {
 void incrementPassword() {
 	if(currPassword_ALPHANUMERIC == lastPassword_ALPHANUMERIC) {
 		// Reached end of range so flag it so
-		currPassword_ALPHANUMERIC = string("");
+		currPassword_ALPHANUMERIC = std::string("");
 	}
 	
-	if(string("") == currPassword_ALPHANUMERIC) {
-		return string("");
+	if(std::string("") == currPassword_ALPHANUMERIC) {
+		return;
 	}
 	
 	

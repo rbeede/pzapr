@@ -29,7 +29,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		zipfileStream.close();
 	}
 	else {
-		log.log("Unable to open the zip file");
+		log->log("Unable to open the zip file");
 		//TODO mpi abort call
 	}
 }

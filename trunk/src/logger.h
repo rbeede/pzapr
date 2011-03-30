@@ -3,6 +3,9 @@
  *
 */
 
+#ifndef _LOGGER_H
+#define _LOGGER_H
+
 
 #include <string>
 #include <iostream>
@@ -61,3 +64,6 @@ Logger::Logger(const string logFilePathname)
 	myfile.open(logFilePathname.c_str(), ios::out);
 }
 
+
+
+#endif  /* _LOGGER_H */

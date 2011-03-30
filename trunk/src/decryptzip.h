@@ -10,6 +10,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "logger.h"
+
 void initDecryptEngine(const char * const zipFilePathname);
 
 bool attemptPassword(const std::string password);
