@@ -1,6 +1,7 @@
 #include "decryptzip.h"  // Only include, all others should be in the .h file
 
 
+
 extern Logger * log;
 
 // Global variables that should only be used by decryptzip
