@@ -115,6 +115,10 @@ int main (const int argc, const char * const argv[]) {
 	logger = new Logger(completeLogFilePathname);
 	
 	logger->log(to_string(GLOBAL_mpiRuntimeInfo->mpi_processor_name) + " rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " of " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
+	
+	for(int i = 0; i < argc; i++) {
+		logger->log("argv[" + to_string(i) + "] == " + to_string(argv[i]));
+	}
 
 	
 	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);

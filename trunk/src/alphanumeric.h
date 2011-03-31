@@ -7,8 +7,10 @@
 #define _ALPHANUMERIC_H
 
 #include <string>
-
 #include <math.h>
+
+#include "logger.h"
+#include "stringutils.h"
 
 
 const int MAX_PASSWORD_LENGTH = 7;
@@ -23,6 +25,7 @@ const char PASSWORD_CHARS[] = {'\0',  // null character must be at index 0
 	'x', 'y', 'z'
 	};
 const int PASSWORD_CHARS_length = 63;  // get this right
+const int POSSIBLE_PASSWORD_CHARS = PASSWORD_CHARS_length - 1;  // Exclude null character
 
 
 void incrementCharacter(const int position);
@@ -32,6 +35,8 @@ long calculateNumberPossible(const int possibleCombinations, const int character
 
 void initializePasswordGenerator_brute(const int rank, const int numProcesses);
 std::string getNextPassword_brute();
+
+std::string passwordFromRangePosition(const long position);
 
 
 #endif /* _ALPHANUMERIC_H */
