@@ -34,7 +34,7 @@ using namespace std;
 extern char **environ;  // May change if you modify the environment in your code
 
 // Global variables
-Logger * log;
+Logger * logger;
 
 
 string makeValidFilename(const string origString) {
@@ -112,9 +112,9 @@ int main (const int argc, const char * const argv[]) {
 	string completeLogFilePathname = string(logFileBasePathname) + "_" + makeValidFilename(GLOBAL_mpiRuntimeInfo->mpi_processor_name)
 		+ "_rank" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + "of" + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc)
 		+ ".log";
-	log = new Logger(completeLogFilePathname);
+	logger = new Logger(completeLogFilePathname);
 	
-	log->log(to_string(GLOBAL_mpiRuntimeInfo->mpi_processor_name) + " rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " of " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
+	logger->log(to_string(GLOBAL_mpiRuntimeInfo->mpi_processor_name) + " rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " of " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
 
 	
 	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);
@@ -133,7 +133,7 @@ int main (const int argc, const char * const argv[]) {
 		password = getNextPassword(isBruteForce);
 		
 		if(password == string("")) {
-			log->log("Ran out of passwords to try");
+			logger->log("Ran out of passwords to try");
 			break;
 		}
 
@@ -146,7 +146,7 @@ int main (const int argc, const char * const argv[]) {
 			
 			if(receivedFlag) {
 				// solutionFoundByRank has been filled in
-				log->log(string("Another process with rank ") + to_string(solutionFoundByRank) + " has found the solution");
+				logger->log(string("Another process with rank ") + to_string(solutionFoundByRank) + " has found the solution");
 				break;
 			}
 		}
@@ -155,9 +155,9 @@ int main (const int argc, const char * const argv[]) {
 
 	// Record the final result
 	if(attemptSuccessful) {
-		log->log("Found the solution of '" + password + "'");
+		logger->log("Found the solution of '" + password + "'");
 	
-		log->log("Notifying all other processes that I found the solution");
+		logger->log("Notifying all other processes that I found the solution");
 		
 		// Tell all other processes that I found the solution
 		for(int i = 0; i < GLOBAL_mpiRuntimeInfo->mpi_num_proc; i++) {
@@ -170,15 +170,15 @@ int main (const int argc, const char * const argv[]) {
 			MPI_Isend((void *) &GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, NULL);
 		}
 	} else {
-		log->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
+		logger->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
 	}
 		
 	
-	log->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
+	logger->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	
 	// Clean up memory and MPI and exit
 	MPI_Request_free(&mpi_request);
-	delete(log);
+	delete(logger);
 	delete(GLOBAL_mpiRuntimeInfo);
 	MPI_Finalize();
 	return 0;

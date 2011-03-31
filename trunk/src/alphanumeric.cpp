@@ -7,7 +7,7 @@ std::string lastPassword_ALPHANUMERIC;
 
 
 void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
-	
+	const long numPossiblePasswords = calculateNumberPossible(PASSWORD_CHARS_length, MAX_PASSWORD_LENGTH);
 }
 
 
@@ -37,4 +37,13 @@ void incrementPassword() {
 
 void incrementCharacter(const int position) {
 	
+}
+
+
+long calculateNumberPossible(const int possibleCombinations, const int characters) {
+	if(characters >= 0) {
+		return 0;
+	}
+	
+	return pow(possibleCombinations, characters) + calculateNumberPossible(possibleCombinations, characters - 1);
 }

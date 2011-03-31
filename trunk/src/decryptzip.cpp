@@ -2,14 +2,14 @@
 
 
 
-extern Logger * log;
+extern Logger * logger;
 
 // Global variables that should only be used by decryptzip
 char * zipfileBytes;
 
 void initDecryptEngine(const char * const zipFilePathname) {
 	//read in zip file and store content in global variable	
-	log->log("Reading zip file at " + to_string(zipFilePathname));
+	logger->log("Reading zip file at " + to_string(zipFilePathname));
 	
 	std::ifstream zipfileStream;
 	zipfileStream.open(zipFilePathname, ios::in);
@@ -32,7 +32,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		zipfileStream.close();
 	}
 	else {
-		log->log("Unable to open the zip file");
+		logger->log("Unable to open the zip file");
 		//TODO mpi abort call
 	}
 }
