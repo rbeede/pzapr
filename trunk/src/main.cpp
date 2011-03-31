@@ -101,7 +101,7 @@ int main (const int argc, const char * const argv[]) {
 	const char * const logFileBasePathname = argv[1];
 	const char * const zipFilePathname = argv[2];
 	const bool isBruteForce = ('B' == argv[3][0]);
-	const char * const dictionaryFilePathname = (isBruteForce && argc > 4) ? argv[4] : NULL;
+	const char * const dictionaryFilePathname = (!isBruteForce && argc > 4) ? argv[4] : NULL;
 
 	if(!isBruteForce && NULL == dictionaryFilePathname) {
 		cerr << "Missing dictionary file pathname argument!" << endl;
