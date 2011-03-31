@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "stringutils.h"
 #include "logger.h"
 
 void initDecryptEngine(const char * const zipFilePathname);

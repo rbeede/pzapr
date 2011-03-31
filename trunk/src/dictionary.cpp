@@ -3,9 +3,11 @@
 
 std::string currPassword_DICTIONARY;
 
+extern Logger * log;
+
 
 void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
-	
+	log->log("Reading dictionary file at " + to_string(dictionaryFilePathname));
 }
 
 std::string getNextPassword_dictionary() {

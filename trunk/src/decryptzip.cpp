@@ -9,8 +9,10 @@ char * zipfileBytes;
 
 void initDecryptEngine(const char * const zipFilePathname) {
 	//read in zip file and store content in global variable	
-	std::fstream zipfileStream;
-	zipfileStream.open(zipFilePathname);
+	log->log("Reading zip file at " + to_string(zipFilePathname));
+	
+	std::ifstream zipfileStream;
+	zipfileStream.open(zipFilePathname, ios::in);
 	
 	//get byte size of zip file
 	if(zipfileStream.is_open())
