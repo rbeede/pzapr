@@ -56,8 +56,9 @@ void get_Displacement_of_Each_Word(std::ifstream &myfile, int* dispWords)
 
 void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
 
-	
 	int tempval;
+	
+	logger->log(rank + ": Reading dictionary file at " + to_string(dictionaryFilePathname));
 
 	/*Calculate total words in the dictionary file*/
 	dictionaryFile.open(dictionaryFilePathname);
@@ -91,7 +92,9 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 
 	string nextPassword;
 
-	if(rank==1)
+	/* Displaying Password list for rank 5*/
+	/*
+	if(rank==5)
 	{
 		cout<< "Process " << rank << ": displaying its psswd list----" << endl;
 		while((nextPassword=getNextPassword_dictionary()) != "")
@@ -99,7 +102,7 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 			cout << nextPassword << endl;
 		}
 	}
-
+	*/
 
 }
 
@@ -111,22 +114,4 @@ std::string getNextPassword_dictionary() {
 	perProcess_WordCount--;
 	
 	return line;
-}
-
-int main(int argc, char** argv)
-{
-	int         my_rank;       /* rank of process      */
-    int         p;             /* number of processes  */
-    int         source;        /* rank of sender       */
-    int         dest;          /* rank of receiver     */
-
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &p);
-
-	initializePasswordGenerator_dictionary(my_rank, p, "abc.txt");
-
-	MPI_Finalize();
-
-	return 0;
 }
