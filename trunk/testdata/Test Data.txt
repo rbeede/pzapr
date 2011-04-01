@@ -1,0 +1,3 @@
+This file is inside a zip encrypted with AES-256 for CSCI5576 - High Perf Sci Computing final group project in the spring 2011.  The project name was PZAPR.
+
+Rodney, Neelam, Yogesh
