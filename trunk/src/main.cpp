@@ -133,8 +133,14 @@ int main (const int argc, const char * const argv[]) {
 	
 	bool attemptSuccessful = false;
 	string password;
+	long numberAttempts = 0;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
+		
+		if(numberAttempts % 1000 == 0) {
+			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
+							+ " attempts");
+		}
 		
 		if(password == string("")) {
 			logger->log("Ran out of passwords to try");
@@ -144,6 +150,8 @@ int main (const int argc, const char * const argv[]) {
 		attemptSuccessful = attemptPassword(password);
 		
 		if(!attemptSuccessful) {
+			numberAttempts++;
+		
 			// Non-blocking check to see if another process has sent a signal that if found the solution :)
 			int receivedFlag = 0;
 			MPI_Test(&mpi_request, &receivedFlag, MPI_STATUS_IGNORE);
@@ -155,7 +163,10 @@ int main (const int argc, const char * const argv[]) {
 			}
 		}
 	}
-	
+
+
+	logger->log(to_string(numberAttempts) + " attempts made by process " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
+
 
 	// Record the final result
 	if(attemptSuccessful) {

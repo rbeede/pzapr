@@ -29,9 +29,6 @@ const int PASSWORD_ALPHABET_length = 63;  // get this right
 const int NUM_POSS_PW_ALPHABET = PASSWORD_ALPHABET_length - 1;  // Exclude null character
 
 
-void incrementCharacter(const int position);
-void incrementPassword();
-
 long calculateNumberPossible(const int possibleCombinations, const int characters);
 
 void initializePasswordGenerator_brute(const int rank, const int numProcesses);

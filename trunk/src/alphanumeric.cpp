@@ -3,9 +3,9 @@
 
 extern Logger * logger;
 
-std::string currPassword_ALPHANUMERIC;
-
-std::string lastPassword_ALPHANUMERIC;
+long startRange_ALPHANUMERIC;
+long endRange_ALPHANUMERIC;
+long currPos_ALPHANUMERIC;
 
 
 void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
@@ -20,57 +20,35 @@ void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
 	//	attempt the last process will have a little bit more work
 	const double blockSize = (double)numPossiblePasswords / (double)numProcesses;
 	
-	long myStartRange = ceil(blockSize * (double)rank);
-	long myEndRange = floor((double)myStartRange + blockSize);
+	startRange_ALPHANUMERIC = ceil(blockSize * (double)rank);
+	endRange_ALPHANUMERIC = floor((double)startRange_ALPHANUMERIC + blockSize);
 	
-	if(0 == myStartRange) {
+	if(0 == startRange_ALPHANUMERIC) {
 		// We adjust after calculating myEndRange
-		myStartRange = 1;  // 0 implies empty password which we don't allow
+		startRange_ALPHANUMERIC = 1;  // 0 implies empty password which we don't allow
 	}
-	if((rank - 1) == numProcesses && numPossiblePasswords != myEndRange) {
+	if((rank - 1) == numProcesses && numPossiblePasswords != endRange_ALPHANUMERIC) {
 		// Need to pick up uneven division although it should be very close
-		logger->log("Adjusting myEndRange from " + to_string(myEndRange) + " to true end range of " +
+		logger->log("Adjusting end range from " + to_string(endRange_ALPHANUMERIC) + " to true end range of " +
 					to_string(numPossiblePasswords));
-		myEndRange = numPossiblePasswords;
-	}
-	
-	logger->log("Process " + to_string(rank) + " is doing brute password range of " + to_string(myStartRange) +
-				" to " + to_string(myEndRange));
-				
-	for(int i = 1; i < myEndRange; i++) {
-		std::string test = passwordFromRangePosition(i);
-		logger->log("DEBUG " + to_string(i) + "\t" + test + "  ENDTEST");
+		endRange_ALPHANUMERIC = numPossiblePasswords;
 	}
 
+	currPos_ALPHANUMERIC = startRange_ALPHANUMERIC - 1;
+	
+	logger->log("Process " + to_string(rank) + " is doing brute password range of " + to_string(startRange_ALPHANUMERIC) +
+				" to " + to_string(endRange_ALPHANUMERIC));
 }
 
 
 std::string getNextPassword_brute() {
-	const std::string currValue = currPassword_ALPHANUMERIC;
+	currPos_ALPHANUMERIC++;
 	
-	// Increment for next time around
-	incrementPassword();
-	
-	return currValue;
-}
-
-
-void incrementPassword() {
-	if(currPassword_ALPHANUMERIC == lastPassword_ALPHANUMERIC) {
-		// Reached end of range so flag it so
-		currPassword_ALPHANUMERIC = std::string("");
+	if(currPos_ALPHANUMERIC > endRange_ALPHANUMERIC) {
+		return string("");
+	} else {
+		return passwordFromRangePosition(currPos_ALPHANUMERIC);
 	}
-	
-	if(std::string("") == currPassword_ALPHANUMERIC) {
-		return;
-	}
-	
-	
-}
-
-
-void incrementCharacter(const int position) {
-	
 }
 
 
