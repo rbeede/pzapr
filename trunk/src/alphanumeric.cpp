@@ -37,8 +37,10 @@ void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
 	logger->log("Process " + to_string(rank) + " is doing brute password range of " + to_string(myStartRange) +
 				" to " + to_string(myEndRange));
 				
-	
-	
+	for(int i = 1; i < myEndRange; i++) {
+		std::string test = passwordFromRangePosition(i);
+		logger->log("DEBUG " + to_string(i) + "\t" + test + "  ENDTEST");
+	}
 
 }
 
@@ -83,21 +85,65 @@ long calculateNumberPossible(const int possibleCombinations, const int character
 
 
 std::string passwordFromRangePosition(const long position) {
-	const int passwordLength = (double)log(position) / (double)log(PASSWORD_CHARS_length);
-	
+	// Figure out how long the password must be at the given position
+	int passwordLength = MAX_PASSWORD_LENGTH;  // assume the worst
+	while(calculateNumberPossible(POSSIBLE_PASSWORD_CHARS, passwordLength) >= position) {
+		passwordLength--;
+	}
+	passwordLength++;
+
 	string password("");
 	
-	long calculation = position;
 	
+	// Holds character index position in PASSWORD_CHARS for factors c1, c2, c3, etc...
+	//	Last element holds first character index (aka factor), next last is second, etc until first element which is
+	//	last character index in PASSWORD_CHARS
+	int factors[passwordLength];
+	for(int i = 0; i < passwordLength; i++) {
+		factors[i] = 0;
+	}
+
 	for(int j = passwordLength - 1; j >= 0; j--) {
-		for(int k = POSSIBLE_PASSWORD_CHARS; k != 0; k--) {
-			if(k * pow(POSSIBLE_PASSWORD_CHARS, j) <= calculation) {
-				password.append(1, PASSWORD_CHARS[k]);
-				calculation = calculation - (k * pow(POSSIBLE_PASSWORD_CHARS, j));
-				break;
-			}
+		long runningTotal = 0;
+		for(int i = passwordLength - 1; i > j; i--) {
+			runningTotal += factors[i] * pow(POSSIBLE_PASSWORD_CHARS, i);
 		}
+		long remainder = position - runningTotal;
+	
+		int factor = remainder / pow(POSSIBLE_PASSWORD_CHARS, j);
+
+		// Did we hit an edge where we may be rolling over?
+		if(0 == factor) {
+			// Need to borrow from previous factor calculated, which may have to borrow as well
+
+			// Need to force previous factor to be 1 less
+			// previous factor is in factors[j+1]
+			for(int prevFacIdx = j+1; prevFacIdx < passwordLength; prevFacIdx++) {
+				factors[prevFacIdx]--;
+				if(factors[prevFacIdx] == 0) {
+					// Borrow one from next factor
+					factors[prevFacIdx] = POSSIBLE_PASSWORD_CHARS;  // set borrowed amount
+					continue;  // next loop around will adjust next factor we borrowed from
+				} else {
+					// Done borrowing
+					break;
+				}
+			}
+
+			
+			// Retry the current factor again
+			j++;
+			continue;
+		}
+		
+		
+		factors[j] = factor;
 	}
 	
+	for(int i = passwordLength - 1; i >= 0; i--) {
+		password.append(1, PASSWORD_CHARS[factors[i]]);
+	}
+	
+
 	return password;
 }

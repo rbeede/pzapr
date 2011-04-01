@@ -8,6 +8,7 @@
 
 #include <string>
 #include <math.h>
+#include <algorithm>
 
 #include "logger.h"
 #include "stringutils.h"
