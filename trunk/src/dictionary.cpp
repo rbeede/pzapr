@@ -5,11 +5,20 @@
 
 #include "dictionary.h"  // Only include, all others should be in the .h file
 
-std::string currPassword_DICTIONARY;
-
 extern Logger * logger;
 
 using namespace std;
+
+
+/*The dictionary_file handler for reading purposes*/
+ifstream dictionaryFile;
+
+/* The position in the file where each process starts reading */
+streampos offset;
+
+/* The number of words each process tries out */ 
+int perProcess_WordCount;
+
 
 int count_Number_Of_Words(std::ifstream &myfile)
 {

@@ -21,18 +21,10 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 std::string getNextPassword_dictionary();
 
 /*This function counts the total number of passwords present in the dictionary*/
-int count_Number_Of_Words(std::ifstream &myfile)
+int count_Number_Of_Words(std::ifstream &myfile);
 
 /*This function calculates the displacement of each word from the start of the dictionary file*/
-void get_Displacement_of_Each_Word(std::ifstream &myfile, int* dispWords)
+void get_Displacement_of_Each_Word(std::ifstream &myfile, int* dispWords);
 
-/*The dictionary_file handler for reading purposes*/
-ifstream dictionaryFile;
-
-/* The position in the file where each process starts reading */
-streampos offset;
-
-/* The number of words each process tries out */ 
-int perProcess_WordCount;
 
 #endif /* _DICTIONARY_H */
