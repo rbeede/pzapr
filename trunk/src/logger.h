@@ -1,6 +1,8 @@
 /*
  * Rodney Beede
  *
+ * 2011-04-05
+ *
 */
 
 #ifndef _LOGGER_H
@@ -20,13 +22,18 @@ class Logger {
 	public:
 		const string logFilePathname;
 
-		Logger(const string);
+		// Constructor
+		// Opens log file located at logFilePathname for writing (truncates any existing file)
+		Logger(const string logFilePathname);
 		
+		// Records the message to the log preceded by a timestamp and with a newline added for you to the end
 		void log(const char * msg);
 		
+		// Convience method to log(const char * msg)
 		void log(const string str);
 		
-		
+		// Destructor
+		// Closes log file
 		~Logger();
 		
 	private:

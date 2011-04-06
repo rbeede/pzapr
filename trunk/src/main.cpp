@@ -66,6 +66,10 @@ void initializePasswordGenerator(const bool isBruteForce, const int rank, const 
 }
 
 
+/**
+ * Calls appropriate method to retrieve the next password for this process
+ *
+*/
 std::string getNextPassword(const bool isBruteForce) {
 	if(isBruteForce) {
 		return getNextPassword_brute();
@@ -81,7 +85,7 @@ std::string getNextPassword(const bool isBruteForce) {
  * 			Element at position argv[0] is usually the path (relative or absolute) to the binary executable for this
  * 			process, but may not be set at all or just some made-up value.
  * envp - Obsolete and no longer POSIX compliant.  If anything were to modify the env this would have pointed to stale
- *			data so instead use the ** environ pointer.
+ *			data so instead use the "extern char **environ" pointer.
 */
 int main (const int argc, const char * const argv[]) {
 	// Output to STDOUT so we at least know it is alive just in case our logging file fails
@@ -109,6 +113,7 @@ int main (const int argc, const char * const argv[]) {
 		return 0;
 	}
 	
+	// Create a valid log file pathname with extra information so each process has a separate log file
 	string completeLogFilePathname = string(logFileBasePathname) + "_" + makeValidFilename(GLOBAL_mpiRuntimeInfo->mpi_processor_name)
 		+ "_rank" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + "of" + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc)
 		+ ".log";
@@ -116,6 +121,7 @@ int main (const int argc, const char * const argv[]) {
 	
 	logger->log(to_string(GLOBAL_mpiRuntimeInfo->mpi_processor_name) + " rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " of " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
 	
+	// Helpful for debugging
 	for(int i = 0; i < argc; i++) {
 		logger->log("argv[" + to_string(i) + "] == " + to_string(argv[i]));
 	}
@@ -131,12 +137,14 @@ int main (const int argc, const char * const argv[]) {
 	MPI_Request mpi_request;
 	MPI_Irecv(&solutionFoundByRank, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &mpi_request);
 	
+	// Loop until we have success, run out of passwords to try, or are told another process found it already
 	bool attemptSuccessful = false;
 	string password;
 	long numberAttempts = 0;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
 		
+		// A little progress indicator but not too often
 		if(numberAttempts % 1000 == 0) {
 			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
 							+ " attempts");
@@ -147,7 +155,7 @@ int main (const int argc, const char * const argv[]) {
 			break;
 		}
 
-		attemptSuccessful = attemptPassword(password);
+		attemptSuccessful = attemptPassword(password);  // This calls our decrypt engine to make the attempt
 		
 		if(!attemptSuccessful) {
 			numberAttempts++;
@@ -164,13 +172,13 @@ int main (const int argc, const char * const argv[]) {
 		}
 	}
 
-
+	// Useful for performance data gathering
 	logger->log(to_string(numberAttempts) + " attempts made by process " + to_string(GLOBAL_mpiRuntimeInfo->mpi_num_proc));
 
 
 	// Record the final result
 	if(attemptSuccessful) {
-		logger->log("Found the solution of '" + password + "'");
+		logger->log("Found the solution:\t'" + password + "'");
 	
 		logger->log("Notifying all other processes that I found the solution");
 		

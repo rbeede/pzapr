@@ -1,6 +1,7 @@
-CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK -I/contrib/bgl/mpe2/include
-LDFLAGS=-L/contrib/bgl/mpe2/lib -llmpe -lmpe
+#CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK -I/contrib/bgl/mpe2/include
+#LDFLAGS=-L/contrib/bgl/mpe2/lib -llmpe -lmpe
 
+CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK
 
 all:
 	mpxlC ${CXXFLAGS} *.cpp -o pzapr.bin ${LDFLAGS}

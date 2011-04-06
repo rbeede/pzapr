@@ -26,12 +26,14 @@ class MPI_Runtime_Info {
 		MPI_Runtime_Info(const int, const int, const char * const, const int);
 };
 
+// Constructor
 MPI_Runtime_Info::MPI_Runtime_Info(const int param_mpi_rank, const int param_mpi_num_proc, const char * const param_mpi_processor_name, const int param_mpi_processor_name_len)
 	: mpi_rank(param_mpi_rank), mpi_num_proc(param_mpi_num_proc), mpi_processor_name(std::string(param_mpi_processor_name, param_mpi_processor_name_len))
 {
 	// All class data members are const so all done
 }
 
+// Returns runtime info for a specific comm
 MPI_Runtime_Info * getMpiRuntimeInfo(const MPI_Comm mpiComm) {
 	int mpi_rank;
 	int mpi_num_proc;
@@ -48,7 +50,6 @@ MPI_Runtime_Info * getMpiRuntimeInfo(const MPI_Comm mpiComm) {
 }
 
 
-
 // Called for you by a constant global variable below
 MPI_Runtime_Info * setupMPI(const MPI_Comm mpiComm) {
 	//In accordance with MPI-2, it is valid to pass NULL in place of argc and argv.
@@ -60,6 +61,7 @@ MPI_Runtime_Info * setupMPI(const MPI_Comm mpiComm) {
 	
 
 /******************** Handly constant global variable *******************/
+// Don't forget to delete(GLOBAL_mpiRuntimeInfo)
 const MPI_Runtime_Info * GLOBAL_mpiRuntimeInfo = setupMPI(MPI_COMM_WORLD);
 
 

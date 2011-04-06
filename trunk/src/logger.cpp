@@ -38,4 +38,3 @@ Logger::Logger(const string logFilePathname)
 	
 	myfile.open(logFilePathname.c_str(), ios::out);
 }
-

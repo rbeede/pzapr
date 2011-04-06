@@ -8,6 +8,7 @@ long endRange_ALPHANUMERIC;
 long currPos_ALPHANUMERIC;
 
 
+
 void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
 	const long numPossiblePasswords = calculateNumberPossible(NUM_POSS_PW_ALPHABET, MAX_PASSWORD_LENGTH);
 	logger->log("Number of possible passwords when there are " + to_string(NUM_POSS_PW_ALPHABET) + 
@@ -52,29 +53,15 @@ std::string getNextPassword_brute() {
 }
 
 
-long calculateNumberPossible(const int possibleCombinations, const int characters) {
-	if(characters <= 0) {
+long calculateNumberPossible(const int possibleCombinations, const int numCharacters) {
+	if(numCharacters <= 0) {
 		return 0;
 	}
 	
-	return pow(possibleCombinations, characters) + calculateNumberPossible(possibleCombinations, characters - 1);
+	return pow(possibleCombinations, numCharacters) + calculateNumberPossible(possibleCombinations, numCharacters - 1);
 }
 
 
-/**
- *	This algorithm allows us to determine a password for an arbitrary position in a range of passwords.
- *
- *	Let position represent the placement of a password in a range of 1 to "all possible passwords of length 1 to MAX_PASSWORD_LENGTH"
- *
- *	Let PASSWORD_ALPHABET represent all the possible characters that can be used in a password with the special requirement
- *		that PASSWORD_ALPHABET[0] = '\0'.
- *	The array indexes represent possible numerical factors that will be used in factoring position later.  The 0 factor
- *		is the '\0' character which is required since we can't use factors of 0 later.
- *
- *	
- *
- *
-*/
 std::string passwordFromRangePosition(const long position) {
 	// Figure out how long the password must be at the given position
 	int passwordLength = MAX_PASSWORD_LENGTH;  // assume the worst
@@ -112,7 +99,7 @@ std::string passwordFromRangePosition(const long position) {
 			for(int prevFacIdx = j+1; prevFacIdx < passwordLength; prevFacIdx++) {
 				factors[prevFacIdx]--;
 				if(factors[prevFacIdx] == 0) {
-					// Borrow one from next factor
+					// Borrow one from factor before previous factor
 					factors[prevFacIdx] = NUM_POSS_PW_ALPHABET;  // set borrowed amount
 					continue;  // next loop around will adjust next factor we borrowed from
 				} else {

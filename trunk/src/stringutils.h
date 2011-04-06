@@ -5,6 +5,14 @@
 #include <iostream>
 #include <sstream>
 
+
+/**
+ * Useful for inline conversion of array to ostream
+ *
+ * Example:  cout << JoinArray(myDoubleArray, myDoubleArray_len) << endl;
+ *
+ *
+*/
 class JoinArray {
 public:
 	JoinArray(const double * array, const int size) : array(array), size(size) {}
@@ -30,6 +38,12 @@ public:
 };
 
 
+/**
+ * Very useful for converting int, etc. to strings
+ *
+ * string("Testing" + to_string(123));
+ *
+*/
 template <class T>
 	inline std::string to_string (const T& t) {
 		std::stringstream ss;
