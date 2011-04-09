@@ -155,7 +155,7 @@ int main (const int argc, const char * const argv[]) {
 			break;
 		}
 
-		attemptSuccessful = attemptPassword(password);  // This calls our decrypt engine to make the attempt
+		attemptSuccessful = attemptPassword(zipFilePathname,password);  // This calls our decrypt engine to make the attempt
 		
 		if(!attemptSuccessful) {
 			numberAttempts++;
