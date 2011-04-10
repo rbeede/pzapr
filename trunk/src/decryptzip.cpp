@@ -166,8 +166,6 @@ bool attemptPassword(const char * const zipFilePathname,const std::string passwo
 
 	mode = (len < 32 ? 1 : len < 48 ? 2 : 3);
 
-	mode = 3;
-
 
 
     	fname = (char*)malloc(strlen(zipFilePathname) + 5);
