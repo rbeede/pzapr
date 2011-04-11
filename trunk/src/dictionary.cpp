@@ -5,12 +5,10 @@
 
 #include "dictionary.h"  // Only include, all others should be in the .h file
 
-//extern Logger * logger;
+extern Logger * logger;
 
 using namespace std;
 
-/*The dictionary_file handler for reading purposes*/
-ifstream alnumfile_read;
 
 /* The position in the file where each process starts reading */
 streampos offset;
@@ -18,102 +16,71 @@ streampos offset;
 /* The number of words each process tries out */ 
 int perProcess_WordCount;
 
-/*check for all alpha numeric characters and special characters like ('_' '!' '~' '*' '#' '$' '%' '^' '&')*/
-bool isValidPassword(string s)
-{
-	int len = s.length();
-	const char *str = new char[len];
-	str = s.c_str();
+/*File handler to read in original password dictionary file*/
+ifstream dictionaryFileHandle;
 
-	for(int i=0; i<len; i++)
-	{
-		if( ! (isalnum(str[i]) || str[i] == '_' || str[i] == '!' || str[i] == '~' || str[i] == '*' || str[i] == '#' || str[i] == '$' || str[i] == '%' || str[i] == '^' || str[i] == '&') )
-			return false;
-	}
-	return true;
-}
 
-int count_Number_Of_Words(std::ifstream &myfile, std::ofstream &write_file)
+
+int count_Number_Of_Words(std::ifstream &myfile)
 {
 	int numWords=0;
 	string line;
 	
-	if(myfile.is_open())
+	while(myfile.good())
 	{
-		while(myfile.good())
-		{
-			getline(myfile, line);
+		getline(myfile, line);
+logger->log("DEBUG:\tdictionary line = '" + line + "'");
 			
-			/*If the password is alphanumeric, put in the alphanumeric file*/
-			if(isValidPassword(line))
-			{
-				++numWords;
-				write_file << line << endl;
-			}
-		}
+		++numWords;
 	}
-	else
-	{
-		//logger->log("Unable to open file!");
-	}
+
+	myfile.seekg ( 0 );  // point back to beginning
 	
 	return numWords;
 }
 
-void get_Displacement_of_Each_Word(std::ifstream &myfile, int* dispWords)
+
+void get_Displacement_of_Each_Word(std::ifstream &myfile, int * dispWords)
 {
 	string line;
-	int i=1;
+	int i = 1;
 	dispWords[0] = 0;
 
-	if(myfile.is_open())
+	while(!(myfile.eof()))
 	{
-		while(!(myfile.eof()))
-		{
-			getline(myfile, line);
-			dispWords[i] = dispWords[i-1] + line.size() + 2;
-			i++;
-			
-		}
+		getline(myfile, line);
+		dispWords[i] = dispWords[i-1] + line.size() + 2;
+		i++;
 	}
-	else
-	{
-		//logger->log("Unable to open file!");
-	}
-	
+
+	myfile.seekg( 0 );
 }
 
-void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
 
+void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
 	int tempval;
 
-	/*File handler to read in original password dictionary file*/
-	ifstream dictionaryFile;
-	
-	/*File handler to write a password file having only alphanumeric passwords*/
-	ofstream alnumfile_write;
-	
-	alnumfile_write.open("alnumpsswd.txt");
-	//logger->log(rank + ": Reading dictionary file at " + to_string(dictionaryFilePathname));
+	logger->log(to_string(rank) + ": Reading dictionary file at " + to_string(dictionaryFilePathname));
 
-	/*Calculate total words in the dictionary file
-	 *and remove the passwords which are not alphanumeric*/
-	dictionaryFile.open(dictionaryFilePathname);
-	
-	int totalWords = count_Number_Of_Words(dictionaryFile, alnumfile_write);
-	dictionaryFile.close();
-	alnumfile_write.close();	
+	// Calculate total words in the dictionary file
+	dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
 
-	perProcess_WordCount = totalWords/numProcesses;
-	tempval = totalWords%numProcesses;
+	if(!dictionaryFileHandle.is_open()) {
+		logger->log("ERROR OPENING DICTIONARY FILE");
+		MPI_Abort( MPI_COMM_WORLD, 255 );
+		return;
+	}
+	
+	const int totalWords = count_Number_Of_Words(dictionaryFileHandle);
+
+	perProcess_WordCount = totalWords / numProcesses;
+	tempval = totalWords % numProcesses;
 
 	
 	int* dispWords = new int[totalWords];
 	
 	/*Find the displacement of each word from the start of the file*/
-	alnumfile_read.open("alnumpsswd.txt");
-	get_Displacement_of_Each_Word(alnumfile_read, dispWords);
-	alnumfile_read.close();
+	get_Displacement_of_Each_Word(dictionaryFileHandle, dispWords);
 
 	/*If the number of passwords not divisible by the number of processes, 
 	then evenly distribute the remaining ones*/
@@ -126,32 +93,26 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	/*The starting position for each process is set here*/
 	offset = (streampos) dispWords[index];
 	
-	alnumfile_read.open("alnumpsswd.txt");
-	alnumfile_read.seekg(offset);
+	dictionaryFileHandle.seekg(offset);
 	
 	string nextPassword;
 
-	/* Displaying Password list for rank 3*/
-	
-	if(rank==3)
+	/* DEBUG to remove */
+	logger->log("Process " + to_string(rank) + ": displaying its psswd list----");
+	while((nextPassword=getNextPassword_dictionary()) != string(""))
 	{
-		cout << endl;
-		cout<< "Process " << rank << ": displaying its psswd list----" << endl;
-		while((nextPassword=getNextPassword_dictionary()) != "")
-		{
-			cout << nextPassword << endl;
-		}
+		logger->log(nextPassword);
 	}
-	
-
 }
 
 std::string getNextPassword_dictionary() {
 	string line("");
 	
-	if(perProcess_WordCount>0)
-		getline(alnumfile_read, line);
-	perProcess_WordCount--;
+	if(perProcess_WordCount > 0) {
+		getline(dictionaryFileHandle, line);
+		perProcess_WordCount--;
+	}
 	
 	return line;
 }
+

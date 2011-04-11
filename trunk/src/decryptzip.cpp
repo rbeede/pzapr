@@ -154,7 +154,7 @@ bool attemptPassword(const char * const zipFilePathname,const std::string passwo
 
 	fcrypt_ctx  zcx[1];
 
-	int len, flen, err = 0;
+	int len, flen = 0;
 
 	unsigned char mode;
 
