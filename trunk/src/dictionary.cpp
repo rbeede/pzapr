@@ -18,7 +18,8 @@ streampos offset;
 /* The number of words each process tries out */ 
 int perProcess_WordCount;
 
-bool isAlphaNumeric(string s)
+/*check for all alpha numeric characters and special characters like ('_' '!' '~' '*' '#' '$' '%' '^' '&')*/
+bool isValidPassword(string s)
 {
 	int len = s.length();
 	const char *str = new char[len];
@@ -26,7 +27,7 @@ bool isAlphaNumeric(string s)
 
 	for(int i=0; i<len; i++)
 	{
-		if(!isalnum(str[i]))
+		if( ! (isalnum(str[i]) || str[i] == '_' || str[i] == '!' || str[i] == '~' || str[i] == '*' || str[i] == '#' || str[i] == '$' || str[i] == '%' || str[i] == '^' || str[i] == '&') )
 			return false;
 	}
 	return true;
@@ -44,7 +45,7 @@ int count_Number_Of_Words(std::ifstream &myfile, std::ofstream &write_file)
 			getline(myfile, line);
 			
 			/*If the password is alphanumeric, put in the alphanumeric file*/
-			if(isAlphaNumeric(line))
+			if(isValidPassword(line))
 			{
 				++numWords;
 				write_file << line << endl;
