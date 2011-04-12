@@ -28,7 +28,7 @@ void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
 		// We adjust after calculating myEndRange
 		startRange_ALPHANUMERIC = 1;  // 0 implies empty password which we don't allow
 	}
-	if((rank - 1) == numProcesses && numPossiblePasswords != endRange_ALPHANUMERIC) {
+	if((rank + 1) == numProcesses && numPossiblePasswords != endRange_ALPHANUMERIC) {
 		// Need to pick up uneven division although it should be very close
 		logger->log("Adjusting end range from " + to_string(endRange_ALPHANUMERIC) + " to true end range of " +
 					to_string(numPossiblePasswords));
