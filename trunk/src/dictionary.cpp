@@ -47,7 +47,7 @@ void get_Displacement_of_Each_Word(std::ifstream &myfile, int * dispWords)
 	while(!(myfile.eof()))
 	{
 		getline(myfile, line);
-		dispWords[i] = dispWords[i-1] + line.size() + 2;
+		dispWords[i] = dispWords[i-1] + line.size() + 1;
 		i++;
 	}
 }
