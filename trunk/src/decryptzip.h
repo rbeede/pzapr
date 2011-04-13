@@ -32,9 +32,9 @@
 
 #include "logger.h"
 
-#include "rijndael.h"
+#include "Gladman/rijndael.h"
 
-#include "fileenc.h"
+#include "Gladman/fileenc.h"
 
 
 
