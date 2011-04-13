@@ -53,24 +53,25 @@ void get_Displacement_of_Each_Word(std::ifstream &myfile, int * dispWords)
 }
 
 
-void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) 
-{
+void initializePasswordGenerator_dictionary(const int rank, const int numProcesses, const char * const dictionaryFilePathname) {
 	int tempval;
+	ifstream fileHandle1, fileHandle2;
 
+	dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
+	fileHandle1.open(dictionaryFilePathname, ios::in);
+	fileHandle2.open(dictionaryFilePathname, ios::in);
+	
 	logger->log(to_string(rank) + ": Reading dictionary file at " + to_string(dictionaryFilePathname));
 
 	// Calculate total words in the dictionary file
-	dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
-
-	if(!dictionaryFileHandle.is_open()) 
-	{
+	if(!dictionaryFileHandle.is_open()) {
 		logger->log("ERROR OPENING DICTIONARY FILE");
 		MPI_Abort( MPI_COMM_WORLD, 255 );
 		return;
 	}
 	
-	const int totalWords = count_Number_Of_Words(dictionaryFileHandle);
-	dictionaryFileHandle.close();
+	const int totalWords = count_Number_Of_Words(fileHandle1);
+	fileHandle1.close();
 
 
 	perProcess_WordCount = totalWords / numProcesses;
@@ -80,9 +81,9 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	int* dispWords = new int[totalWords];
 	
 	/*Find the displacement of each word from the start of the file*/
-	dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
-	get_Displacement_of_Each_Word(dictionaryFileHandle, dispWords);
-	dictionaryFileHandle.close();
+	//dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
+	get_Displacement_of_Each_Word(fileHandle2, dispWords);
+	fileHandle2.close();
 
 	/*If the number of passwords not divisible by the number of processes, 
 	then evenly distribute the remaining ones*/
@@ -94,27 +95,26 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 
 	/*The starting position for each process is set here*/
 	offset = (streampos) dispWords[index];
-	dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
+	//dictionaryFileHandle.open(dictionaryFilePathname, ios::in);
 	dictionaryFileHandle.seekg(offset);
 	
 	string nextPassword;
 
+	logger->log("\nProcess " + to_string(rank) + ": \n" + "total_words= " + to_string(totalWords) + "\nNo. of Words I will crack: " + to_string(perProcess_WordCount));
+
 	/* DEBUG to remove */
 	logger->log("Process " + to_string(rank) + ": displaying its psswd list----");
-		
+
 	while((nextPassword=getNextPassword_dictionary()) != string(""))
 	{
 		logger->log(nextPassword);
 	}
-	
 }
 
-std::string getNextPassword_dictionary() 
-{
+std::string getNextPassword_dictionary() {
 	string line("");
 	
-	if(perProcess_WordCount > 0) 
-	{
+	if(perProcess_WordCount > 0) {
 		getline(dictionaryFileHandle, line);
 		perProcess_WordCount--;
 	}
