@@ -4,7 +4,7 @@
 using namespace std;
 
 
-verifier_data verifier_data_object;
+struct verifier_data verifier_data_object;
 
 
 extern Logger * logger;
@@ -43,29 +43,29 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	ifstream zipfileStream;
 
 	
-	zipfileStream.open(zipFilePathname, ios_base::in | ios_base::binary);
+	zipfileStream.open(zipFilePathname, ios::in | ios::binary);
 	
 	
-	zipfileStream.seekg(0, ios_base::end);
+	zipfileStream.seekg(0, ios::end);
 	
 	const streampos zipfileByteSize = zipfileStream.tellg();
 	
-	logger->log("DEBUG:\tzipfileByteSize = " + to_string(zipfileByteSize));
+	//logger->log("DEBUG:\tzipfileByteSize = " + to_string(zipfileByteSize));
 	
 	
 	zipfileStream.seekg(0, ios_base::beg);
-	logger->log("File position is now " + to_string(zipfileStream.tellg()));
+	//logger->log("File position is now " + to_string(zipfileStream.tellg()));
 	//zipfileStream.clear();
 	
 	
 	if(zipfileStream.fail()) {
-		logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
+		//logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
 	}
 	
 	if(zipfileStream.is_open() && zipfileStream.good()) {
-		logger->log("DEBUG:\tALL STREAM FLAGS GOOD");
+		//logger->log("DEBUG:\tALL STREAM FLAGS GOOD");
 	} else {
-		logger->log("DEBUG:\tFAILURED ON STREAM FLAGS");
+		//logger->log("DEBUG:\tFAILURED ON STREAM FLAGS");
 	}
 	
 	
@@ -76,19 +76,19 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	
 	zipfileStream.read((char*)&header, 30);
 	
-	logger->log("Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	// Read in the filename
 	zipfileStream.read((char *)(&header.fileName), header.fileNameLength);
 	// Enforce null termination
 	header.fileName[header.fileNameLength] = '\0';
 	
-	logger->log("2Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("2Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	// Read in the extra field data
 	zipfileStream.read((char *)(&header.extraField), header.extraFieldLength);
 	
-	logger->log("3Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("3Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	if(header.extraFieldLength > 0 && 99 == header.compressionMethod) {  // 99 means AES
 		const AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
@@ -135,7 +135,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		// next is authentication code which is 10 bytes
 		// we don't bother with this
 		
-		
+/*		
 cout << "Password Verification:\t";
 		cout << hex;
 		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[0];  // convert to int so value isn't treated like char
@@ -143,12 +143,12 @@ cout << "Password Verification:\t";
 		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[1];  // convert to int so value isn't treated like char
 		cout << endl;
 		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
-		
+*/		
 		
 		// There is a 1 in 65,536 chance that an incorrect password will yield a matching verification value
 
 	} else {
-		logger->log("ERROR:  ZIP FILE IS NOT AES ENCRYPTED!");
+		//logger->log("ERROR:  ZIP FILE IS NOT AES ENCRYPTED!");
 	}
 
 
@@ -172,3 +172,4 @@ bool attemptPassword(const std::string password) {
                 return true; //Password matched
 
 }
+
