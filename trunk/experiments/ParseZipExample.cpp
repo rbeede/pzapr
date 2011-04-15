@@ -1,10 +1,12 @@
 /**
  * Rodney Beede
- * 2011-04-13
+ * 2011-04-15
  *
  * http://livedocs.adobe.com/flex/3/html/help.html?content=ByteArrays_3.html
  *
  * http://www.winzip.com/aes_info.htm#file-format1
+ *
+ * This version also handles architectures that are big-endian (MSB) instead of LSB.
  *
 */
 
@@ -85,7 +87,7 @@ int main (const int argc, const char * const argv[]) {
 	
 
 	cout << "File Header Signature:\t0x" << setfill('0') << setw(8) << hex << header.fileHeaderSignature << endl;  //OUTPUT in hex
-	//std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+	cout << dec;
 	cout << "Required Version:\t" << header.requiredVersion << endl;
 	cout << "General Purpose Bit Flag:\t" << header.generalPurposeBitFlag << endl;
 	cout << "Compression Method:\t" << header.compressionMethod << endl;
@@ -103,7 +105,7 @@ int main (const int argc, const char * const argv[]) {
 	cout << setfill('0');
 	cout << "Last Modified File Time (MS-DOS precision):\t" << setw(2) << hours << ":" << setw(2) << minutes << ":" << setw(2) << seconds << endl;
 	cout << "Last Modified File Date (MS-DOS precision):\t" << setw(2) << year << "-" << setw(2) << month << "-" << setw(2) << day << endl;
-	//std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+	cout << dec;
 	cout << "CRC-32:\t" << header.crc32 << endl;
 	cout << "Compressed Size:\t" << header.compressedSize << endl;
 	cout << "Uncompressed Size:\t" << header.uncompressedSize << endl;
@@ -121,7 +123,7 @@ int main (const int argc, const char * const argv[]) {
 			return 255;
 		} else {
 			cout << "AES_ExtraDataField->headerID:\t0x" << setfill('0') << setw(4) << hex << aesExtraDataField->headerID << endl;
-			//std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+			cout << dec;
 		}
 		
 		cout << "AES_ExtraDataField->dataSize:\t" << aesExtraDataField->dataSize << endl;
@@ -181,13 +183,13 @@ int main (const int argc, const char * const argv[]) {
 		
 		cout << endl;
 		
-		//std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+		cout << dec;
 	}
 
 
 	cout << "File position is now " << zipfileStream.tellg() << hex << " (0x" << zipfileStream.tellg() << ")" << endl;
 	cout << endl;
-	//std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+	cout << dec;
 	
 	
 	zipfileStream.close();
