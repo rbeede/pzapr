@@ -53,10 +53,10 @@ struct AES_ExtraDataField {
 int main (const int argc, const char * const argv[]) {
 	ifstream zipfileStream;
 	
-	zipfileStream.open(argv[1], ios_base::in | ios_base::binary);
+	zipfileStream.open(argv[1], ios::in | ios::binary);
 	
 	
-	zipfileStream.seekg(0, ios_base::end);
+	zipfileStream.seekg(0, ios::end);
 	
 	const streampos zipfileByteSize = zipfileStream.tellg();
 	
