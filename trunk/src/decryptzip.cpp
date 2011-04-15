@@ -50,8 +50,15 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	
 	const streampos zipfileByteSize = zipfileStream.tellg();
 	
+	logger->log("DEBUG:\tzipfileByteSize = " + to_string(zipfileByteSize));
+	
 
-	zipfileStream.seekg (0, ios::beg);
+	zipfileStream.seekg(0, ios_base::beg);
+	
+	
+	if(zipFileStream.fail()) {
+		logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
+	}
 	
 	
 	/* Note that zip files store values in LSB order */
@@ -106,7 +113,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		
 		//byte passwordVerification[2];
 		
-		zipfileStream.read((char *)(&verifier_data_object.passwordVerification), 2);
+		zipfileStream.read((char *)(&(verifier_data_object.passwordVerification)), 2);
 		
 		// next is encrypted data which has length of header.compressedSize
 		// we don't bother with this
@@ -118,6 +125,8 @@ void initDecryptEngine(const char * const zipFilePathname) {
 
 		// There is a 1 in 65,536 chance that an incorrect password will yield a matching verification value
 
+	} else {
+		logger->log("ERROR:  ZIP FILE IS NOT AES ENCRYPTED!");
 	}
 
 
