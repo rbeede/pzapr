@@ -175,6 +175,10 @@ bool attemptPassword(const std::string password) {
 
 main(const int argc, const char * const argv[])
 {
+	cout << "sizeof int\t" << sizeof(int) << endl;
+	cout << "sizeof long\t" << sizeof(long) << endl;
+
+
 	initDecryptEngine(argv[1]);
 	cout<<attemptPassword(argv[2])<<endl;
 }
