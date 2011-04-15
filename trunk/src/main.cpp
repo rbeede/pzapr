@@ -160,7 +160,7 @@ int main (const int argc, const char * const argv[]) {
 		
 		if(!attemptSuccessful) {
 			numberAttempts++;
-		
+logger->log("DEBUG:\t" + password + " DIDNT WORK");
 			// Non-blocking check to see if another process has sent a signal that if found the solution :)
 			int receivedFlag = 0;
 			MPI_Test(&mpi_request, &receivedFlag, MPI_STATUS_IGNORE);

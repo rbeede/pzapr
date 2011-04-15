@@ -29,7 +29,6 @@ int count_Number_Of_Words(std::ifstream &myfile)
 	while(myfile.good())
 	{
 		getline(myfile, line);
-		logger->log("DEBUG:\tdictionary line = '" + line + "'");
 			
 		++numWords;
 	}
@@ -71,6 +70,9 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	}
 	
 	const int totalWords = count_Number_Of_Words(fileHandle1);
+	
+	logger->log("There were " + to_string(totalWords) + " total dictionary words");
+	
 	fileHandle1.close();
 
 
@@ -100,15 +102,7 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	
 	string nextPassword;
 
-	logger->log("\nProcess " + to_string(rank) + ": \n" + "total_words= " + to_string(totalWords) + "\nNo. of Words I will crack: " + to_string(perProcess_WordCount));
-
-	/* DEBUG to remove */
-	logger->log("Process " + to_string(rank) + ": displaying its psswd list----");
-
-	while((nextPassword=getNextPassword_dictionary()) != string(""))
-	{
-		logger->log(nextPassword);
-	}
+	logger->log("Process " + to_string(rank) + ":  " + "total_words= " + to_string(totalWords) + "No. of Words I will crack: " + to_string(perProcess_WordCount));
 }
 
 std::string getNextPassword_dictionary() {

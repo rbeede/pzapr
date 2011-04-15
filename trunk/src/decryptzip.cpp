@@ -126,9 +126,9 @@ struct verifier_data initDecryptEngine(const char * const zipFilePathname) {
 
 bool attemptPassword(struct verifier_data verifier_data_object,const std::string password) {
 
-	fcrypt_ctx  zcx[1];
+	fcrypt_ctx  zcx;
         byte tmp_buf[2];
-        fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, zcx);	//find out the value of password verifier with the given password
+        fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, &zcx);	//find out the value of password verifier with the given password
 
         if(memcmp(verifier_data_object.passwordVerification,tmp_buf,2))
         {
