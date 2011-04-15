@@ -56,7 +56,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	zipfileStream.seekg(0, ios_base::beg);
 	
 	
-	if(zipFileStream.fail()) {
+	if(zipfileStream.fail()) {
 		logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
 	}
 	
