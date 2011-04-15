@@ -7,7 +7,7 @@ using namespace std;
 struct verifier_data verifier_data_object;
 
 
-//extern Logger * logger;
+extern Logger * logger;
 
 struct HeaderForFileInZip {
 	uint32_t fileHeaderSignature;
@@ -43,29 +43,29 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	ifstream zipfileStream;
 
 	
-	zipfileStream.open(zipFilePathname, ios_base::in | ios_base::binary);
+	zipfileStream.open(zipFilePathname, ios::in | ios::binary);
 	
 	
-	zipfileStream.seekg(0, ios_base::end);
+	zipfileStream.seekg(0, ios::end);
 	
 	const streampos zipfileByteSize = zipfileStream.tellg();
 	
-//	logger->log("DEBUG:\tzipfileByteSize = " + to_string(zipfileByteSize));
+	//logger->log("DEBUG:\tzipfileByteSize = " + to_string(zipfileByteSize));
 	
 	
 	zipfileStream.seekg(0, ios_base::beg);
-//	logger->log("File position is now " + to_string(zipfileStream.tellg()));
+	//logger->log("File position is now " + to_string(zipfileStream.tellg()));
 	//zipfileStream.clear();
 	
 	
 	if(zipfileStream.fail()) {
-//		logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
+		//logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
 	}
 	
 	if(zipfileStream.is_open() && zipfileStream.good()) {
-//		logger->log("DEBUG:\tALL STREAM FLAGS GOOD");
+		//logger->log("DEBUG:\tALL STREAM FLAGS GOOD");
 	} else {
-//		logger->log("DEBUG:\tFAILURED ON STREAM FLAGS");
+		//logger->log("DEBUG:\tFAILURED ON STREAM FLAGS");
 	}
 	
 	
@@ -76,19 +76,19 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	
 	zipfileStream.read((char*)&header, 30);
 	
-//	logger->log("Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	// Read in the filename
 	zipfileStream.read((char *)(&header.fileName), header.fileNameLength);
 	// Enforce null termination
 	header.fileName[header.fileNameLength] = '\0';
 	
-//	logger->log("2Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("2Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	// Read in the extra field data
 	zipfileStream.read((char *)(&header.extraField), header.extraFieldLength);
 	
-//	logger->log("3Num of chars read was " + to_string(zipfileStream.gcount()));
+	//logger->log("3Num of chars read was " + to_string(zipfileStream.gcount()));
 	
 	if(header.extraFieldLength > 0 && 99 == header.compressionMethod) {  // 99 means AES
 		const AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
@@ -135,13 +135,20 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		// next is authentication code which is 10 bytes
 		// we don't bother with this
 		
-		
-		
+/*		
+cout << "Password Verification:\t";
+		cout << hex;
+		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[0];  // convert to int so value isn't treated like char
+		cout << " ";
+		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[1];  // convert to int so value isn't treated like char
+		cout << endl;
+		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+*/		
 		
 		// There is a 1 in 65,536 chance that an incorrect password will yield a matching verification value
 
 	} else {
-//		logger->log("ERROR:  ZIP FILE IS NOT AES ENCRYPTED!");
+		//logger->log("ERROR:  ZIP FILE IS NOT AES ENCRYPTED!");
 	}
 
 
@@ -153,48 +160,25 @@ void initDecryptEngine(const char * const zipFilePathname) {
 
 bool attemptPassword(const std::string password) {
 
-	fcrypt_ctx  zcx[1];
+	fcrypt_ctx  zcx;
         unsigned char tmp_buf[2];
-        fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, zcx);	//find out the value of password verifier with the given password
+        fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, &zcx);	//find out the value of password verifier with the given password
 
-cout << "MODE IS " << verifier_data_object.mode << endl;
-cout << "Trying password " << password << " which has length " << password.length() << endl;
-cout << "Password Verification:\t";
-		cout << hex;
-		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[0];  // convert to int so value isn't treated like char
-		cout << " ";
-		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[1];  // convert to int so value isn't treated like char
-		cout << endl;
-		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
-cout << endl;
-cout << "Password Verification CALCULATED:\t";
-		cout << hex;
-		cout << setfill('0');
-		cout << "0x" << setw(2) << (int) tmp_buf[0];  // convert to int so value isn't treated like char
-		cout << " ";
-		cout << "0x" << setw(2) << (int) tmp_buf[1];  // convert to int so value isn't treated like char
-		cout << endl;
-		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
-
-		cout << "File Salt:\t0x";
-		cout << setfill('0') << hex;
-		for(int i = 0; i < 16; i++) {
-			cout << setw(2) << (int) verifier_data_object.salt[i];  // convert to int so value isn't treated like char
-		}
-		cout << endl;
-		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
-	
         if(memcmp(verifier_data_object.passwordVerification,tmp_buf,2))
         {
         	return false;	//Password dint match
-        } else {
-			return true; //Password matched
-		}
+        }
+        else
+                return true; //Password matched
 
 }
 
+main(const int argc, const char * const argv[])
+{
+	cout << "sizeof int\t" << sizeof(int) << endl;
+	cout << "sizeof long\t" << sizeof(long) << endl;
 
-int main(const int argc, const char * const argv[]) {
+
 	initDecryptEngine(argv[1]);
-	cout << attemptPassword(argv[2]) << endl;
+	cout<<attemptPassword(argv[2])<<endl;
 }
