@@ -3,6 +3,10 @@
 
 using namespace std;
 
+
+verifier_data verifier_data_object;
+
+
 extern Logger * logger;
 
 struct HeaderForFileInZip {
@@ -34,10 +38,10 @@ struct AES_ExtraDataField {
 
 
 
-struct verifier_data initDecryptEngine(const char * const zipFilePathname) {
+void initDecryptEngine(const char * const zipFilePathname) {
 
 	ifstream zipfileStream;
-	verifier_data verifier_data_object;		
+
 	
 	zipfileStream.open(zipFilePathname, ios_base::in | ios_base::binary);
 	
@@ -119,12 +123,11 @@ struct verifier_data initDecryptEngine(const char * const zipFilePathname) {
 
 	
 	zipfileStream.close();
-	return verifier_data_object;
 }
 
 
 
-bool attemptPassword(struct verifier_data verifier_data_object,const std::string password) {
+bool attemptPassword(const std::string password) {
 
 	fcrypt_ctx  zcx;
         byte tmp_buf[2];

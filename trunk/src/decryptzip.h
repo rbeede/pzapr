@@ -34,9 +34,9 @@ struct verifier_data{
         byte passwordVerification[2];
 };
 
-struct verifier_data initDecryptEngine(const char * const zipFilePathname);
+void initDecryptEngine(const char * const zipFilePathname);
 
-bool attemptPassword(struct verifier_data verifier_data_object,const std::string password);
+bool attemptPassword(const std::string password);
 
 
 #endif /* _DECRYPTZIP_H */

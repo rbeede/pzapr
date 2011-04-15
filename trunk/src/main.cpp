@@ -129,8 +129,7 @@ int main (const int argc, const char * const argv[]) {
 	
 	initializePasswordGenerator(isBruteForce, GLOBAL_mpiRuntimeInfo->mpi_rank, GLOBAL_mpiRuntimeInfo->mpi_num_proc, dictionaryFilePathname);
 
-	struct verifier_data verifier_data_object;	
-	verifier_data_object=initDecryptEngine(zipFilePathname);
+	initDecryptEngine(zipFilePathname);
 
 	
 	// Listen (non-blocking) for a signal from another process in case it found the solution
@@ -144,7 +143,7 @@ int main (const int argc, const char * const argv[]) {
 	long numberAttempts = 0;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
-		
+password = "wrong solution";
 		// A little progress indicator but not too often
 		if(numberAttempts % 1000 == 0) {
 			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
@@ -156,7 +155,7 @@ int main (const int argc, const char * const argv[]) {
 			break;
 		}
 
-		attemptSuccessful = attemptPassword(verifier_data_object,password);  // This calls our decrypt engine to make the attempt
+		attemptSuccessful = attemptPassword(password);  // This calls our decrypt engine to make the attempt
 		
 		if(!attemptSuccessful) {
 			numberAttempts++;
