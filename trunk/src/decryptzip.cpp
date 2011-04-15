@@ -55,7 +55,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	
 	zipfileStream.seekg(0, ios_base::beg);
 	logger->log("File position is now " + to_string(zipfileStream.tellg()));
-	zipfileStream.clear();
+	//zipfileStream.clear();
 	
 	
 	if(zipfileStream.fail()) {
@@ -136,7 +136,15 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		// we don't bother with this
 		
 		
-
+cout << "Password Verification:\t";
+		cout << hex;
+		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[0];  // convert to int so value isn't treated like char
+		cout << " ";
+		cout << "0x" << setw(2) << (int) verifier_data_object.passwordVerification[1];  // convert to int so value isn't treated like char
+		cout << endl;
+		std::cout.copyfmt(std::ios(NULL));  // Reset formatting to defaults
+		
+		
 		// There is a 1 in 65,536 chance that an incorrect password will yield a matching verification value
 
 	} else {
