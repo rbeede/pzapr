@@ -143,7 +143,7 @@ int main (const int argc, const char * const argv[]) {
 	long numberAttempts = 0;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
-password = "wrong solution";
+//password = "wrong solution";
 		// A little progress indicator but not too often
 		if(numberAttempts % 1000 == 0) {
 			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
