@@ -142,6 +142,7 @@ int main (const int argc, const char * const argv[]) {
 	bool attemptSuccessful = false;
 	string password;
 	long long numberAttempts = 0;
+	logger->log("Starting attempts");
 	while(!attemptSuccessful) {
 		numberAttempts++;
 		password = getNextPassword(isBruteForce);
@@ -190,7 +191,8 @@ int main (const int argc, const char * const argv[]) {
 			
 			// Use non-blocking send since it is possible that some processes have already exited because they tried
 			//	all the possible solutions and didn't find one.
-			MPI_Isend((void *) &GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, NULL);
+			MPI_Request mpiRequest_send;
+			MPI_Isend((void *) &GLOBAL_mpiRuntimeInfo->mpi_rank, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &mpiRequest_send);
 		}
 	} else {
 		logger->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
