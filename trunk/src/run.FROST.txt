@@ -1,1 +1,0 @@
-cqsub -n 1024 -t 24:00:00 -p INSERTCLASSCODEHERE -q default -N rodney.beede@colorado.edu ./pzapr.bin /ptmp/rbeede/TESTRUN_${COBALT_JOBID}_pzapr /ptmp/rbeede/pzapr.bin BRUTE

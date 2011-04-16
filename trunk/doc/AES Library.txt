@@ -1,0 +1,5 @@
+http://www.gladman.me.uk/cryptography_technology/fileencrypt/
+
+Warning:  It uses his original AES library code from 2004 which doesn't work on 64-bit compiliations.
+
+You have to g++ -m32 Gladman/*.cpp in order for it to work correctly!

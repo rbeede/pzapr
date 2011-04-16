@@ -42,6 +42,7 @@ string makeValidFilename(const string origString) {
 	
 	size_t position;
 	
+	// Replace any characters not in the given string with _
 	while(string::npos != (position = str.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_"))) {
 		str[position] = '_';
 	}
@@ -143,9 +144,9 @@ int main (const int argc, const char * const argv[]) {
 	long numberAttempts = 0;
 	while(!attemptSuccessful) {
 		password = getNextPassword(isBruteForce);
-password = "00000000";
-		// A little progress indicator but not too often
-		if(numberAttempts % 1000 == 0) {
+
+		// A little progress indicator but not too often to avoid filling up the disk with log entries
+		if(numberAttempts % 100000 == 0) {
 			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
 							+ " attempts");
 		}
@@ -159,7 +160,7 @@ password = "00000000";
 		
 		if(!attemptSuccessful) {
 			numberAttempts++;
-logger->log("DEBUG:\t" + password + " DIDNT WORK");
+
 			// Non-blocking check to see if another process has sent a signal that if found the solution :)
 			int receivedFlag = 0;
 			MPI_Test(&mpi_request, &receivedFlag, MPI_STATUS_IGNORE);
