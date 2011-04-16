@@ -92,7 +92,7 @@ int main (const int argc, const char * const argv[]) {
 	const bool littleEndian = (0x04034b50 == header.fileHeaderSignature);
 	if(!littleEndian) {
 		// Either not a zip file or this architecture is MSB (big endian) so we need to check
-		header.fileHeaderSignature = FIX_SHORT(header.fileHeaderSignature);
+		header.fileHeaderSignature = FIX_INT(header.fileHeaderSignature);
 		
 		if(0x04034b50 != header.fileHeaderSignature) {
 			cerr << "Not a ZIP file!" << endl;
