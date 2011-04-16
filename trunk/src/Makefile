@@ -9,11 +9,13 @@
 #
 #	See http://www.open-mpi.org/community/lists/users/2006/04/0992.php
 #
-#	./configure --prefix=/opt/openmpi-1.y.z_32-bit CFLAGS=-m32 CXXFLAGS=-m32 FFLAGS=-m32 FCFLAGS=-m32
+#	./configure --prefix=/opt/openmpi-1.4.3_32-bit CFLAGS=-m32 CXXFLAGS=-m32 FFLAGS=-m32 FCFLAGS=-m32
+#
+#	You'll need to put /opt/openmpi-1.4.3_32-bit/bin/  in your system path too when you make all
 
 
 all: 
-	/opt/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
+	mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
 	ls -la --full-time --color
 	
 clean:
