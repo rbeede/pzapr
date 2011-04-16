@@ -70,8 +70,8 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 
 	/*------Counts the total number of words in the dictionary file------*/
 	const int totalWords = count_Number_Of_Words(dictionaryFileHandle);
-	dictionaryFileHandle.seekg(0, ios::bed);
-	dictionaryFileHandle.clear();
+	dictionaryFileHandle.seekg(0, ios::beg);
+	dictionaryFileHandle.clear();  // needed to reset flags
 	/*-------------------------------------------------------------------*/
 
 
@@ -84,8 +84,8 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	int* dispWords = new int[totalWords];
 	
 	/*----Finds the displacement of each word from the start of the file----*/
-	get_Displacement_of_Each_Word(fileHandle2, dispWords);
-	dictionaryFileHandle.seekg(0, ios::bed);
+	get_Displacement_of_Each_Word(dictionaryFileHandle, dispWords);
+	dictionaryFileHandle.seekg(0, ios::beg);
 	dictionaryFileHandle.clear();
 	/*----------------------------------------------------------------------*/
 
@@ -93,8 +93,9 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	/* If the number of passwords not divisible by the number of processes, 
 	 * then evenly distribute the remaining ones.
 	 * Important to balance load evenly amongst all the processes*/
-	if(rank<tempval)
+	if(rank<tempval) {
 		perProcess_WordCount++;
+	}
 	/*-------------------------------------------------------------------*/
 
 
@@ -111,6 +112,8 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	/*------------------------------------------------------------*/
 
 
+	delete(dispWords);
+	
 	logger->log("Process " + to_string(rank) + ":  " + "total_words= " + to_string(totalWords) + "No. of Words I will crack: " + to_string(perProcess_WordCount));
 }
 
