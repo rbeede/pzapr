@@ -157,7 +157,7 @@ int main (const int argc, const char * const argv[]) {
 	cout << endl;
 	
 	if(header.extraFieldLength > 0 && 99 == header.compressionMethod) {  // 99 means AES
-		const AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
+		AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
 		
 		if(!littleEndian) {
 			// Need to adjust the header to big endian
