@@ -60,6 +60,34 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	
 	zipfileStream.read((char*)&header, 30);
 	
+	
+	// Endian check
+	const bool littleEndian = (0x04034b50 == header.fileHeaderSignature);
+	if(!littleEndian) {
+		// Either not a zip file or this architecture is MSB (big endian) so we need to check
+		header.fileHeaderSignature = FIX_INT(header.fileHeaderSignature);
+		
+		if(0x04034b50 != header.fileHeaderSignature) {
+			logger->log("Not a ZIP file!");
+			return;
+		} else {
+			logger->log("Fixing little endian to big endian");
+		}
+		
+		// Now to correct the rest of it
+		header.requiredVersion = FIX_SHORT(header.requiredVersion);
+		header.generalPurposeBitFlag = FIX_SHORT(header.generalPurposeBitFlag);
+		header.compressionMethod = FIX_SHORT(header.compressionMethod);
+		header.lastModifiedFileTime = FIX_SHORT(header.lastModifiedFileTime);
+		header.lastModifiedFileDate = FIX_SHORT(header.lastModifiedFileDate);
+		header.crc32 = FIX_INT(header.crc32);
+		header.compressedSize = FIX_INT(header.compressedSize);
+		header.uncompressedSize = FIX_INT(header.uncompressedSize);
+		header.fileNameLength = FIX_SHORT(header.fileNameLength);
+		header.extraFieldLength = FIX_SHORT(header.extraFieldLength);
+	}
+	
+	
 	// Read in the filename
 	zipfileStream.read((char *)(&header.fileName), header.fileNameLength);
 	// Enforce null termination
@@ -69,11 +97,22 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	zipfileStream.read((char *)(&header.extraField), header.extraFieldLength);
 	
 	if(header.extraFieldLength > 0 && 99 == header.compressionMethod) {  // 99 means AES
-		const AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
+		AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
+		
+		if(!littleEndian) {
+			// Need to adjust the header to big endian
+			aesExtraDataField->headerID = FIX_SHORT(aesExtraDataField->headerID);
+			aesExtraDataField->dataSize = FIX_SHORT(aesExtraDataField->dataSize);
+			aesExtraDataField->zipVendorVersion = FIX_SHORT(aesExtraDataField->zipVendorVersion);
+			// vendorId is a char array so no need to fix
+			// aesEncryptionStrengthMode is only 1 byte so nothing to fix
+			aesExtraDataField->actualCompressionMethod = FIX_SHORT(aesExtraDataField->actualCompressionMethod);
+		}
+		
 		
 		if(0x9901 != aesExtraDataField->headerID) {
-			cerr << "Extra data field is not AES!" << endl;
-			//return 255;
+			logger->log("Extra data field is not AES!");
+			return;
 		} 
 		
 
@@ -97,8 +136,10 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		 }
 		
 		zipfileStream.read((char *)(&verifier_data_object.salt), saltLengthInBytes);
+		// since salt is an array no need to adjust for little/big endian
 		
 		zipfileStream.read((char *)(&(verifier_data_object.passwordVerification)), 2);
+		// since passwordVerification is an array no need to adjust for little/big endian
 		
 		// next is encrypted data which has length of header.compressedSize
 		// we don't bother with this
