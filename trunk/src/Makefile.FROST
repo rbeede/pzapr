@@ -1,14 +1,12 @@
 # WARNING:  Frost is big-endian (MSB) instead of LSB.  The code should handle this though.
 # Note:  Frost is a 32-bit only hardware architecture so no need to worry about forcing 32-bit compile mode
 
-CXXFLAGS=-DMPICH_IGNORE_CXX_SEEK
 
 all:
-	mpxlC ${CXXFLAGS} *.cpp -o pzapr.bin ${LDFLAGS}
+	mpxlC -Wall Gladman/*.cpp *.cpp -o pzapr.bin
 	
 	ls -la --full-time --color
-	
-	
+		
 	
 clean:
 	rm -f *.o

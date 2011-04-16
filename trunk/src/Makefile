@@ -16,6 +16,7 @@
 
 all: 
 	mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
+	
 	ls -la --full-time --color
 	
 clean:
