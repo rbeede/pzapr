@@ -21,14 +21,14 @@ ifstream dictionaryFileHandle;
 
 
 
-int count_Number_Of_Words(std::ifstream &myfile)
+int count_Number_Of_Words()
 {
 	int numWords=0;
 	string line;
 	
-	while(myfile.good())
+	while(dictionaryFileHandle.good())
 	{
-		getline(myfile, line);
+		getline(dictionaryFileHandle, line);
 			
 		++numWords;
 	}
@@ -37,15 +37,15 @@ int count_Number_Of_Words(std::ifstream &myfile)
 }
 
 
-void get_Displacement_of_Each_Word(std::ifstream &myfile, int * dispWords)
+void get_Displacement_of_Each_Word(int * dispWords)
 {
 	string line;
 	int i = 1;
 	dispWords[0] = 0;
 
-	while(!(myfile.eof()))
+	while(!(dictionaryFileHandle.eof()))
 	{
-		getline(myfile, line);
+		getline(dictionaryFileHandle, line);
 		dispWords[i] = dispWords[i-1] + line.size() + 1;
 		i++;
 	}
@@ -69,9 +69,11 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	
 
 	/*------Counts the total number of words in the dictionary file------*/
-	const int totalWords = count_Number_Of_Words(dictionaryFileHandle);
+	const int totalWords = count_Number_Of_Words();
+	dictionaryFileHandle.clear();  // needed to reset flags
 	dictionaryFileHandle.seekg(0, ios::beg);
 	dictionaryFileHandle.clear();  // needed to reset flags
+	logger->log("Dictionary file position is now " + to_string(dictionaryFileHandle.tellg()));
 	/*-------------------------------------------------------------------*/
 
 
@@ -84,7 +86,8 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 	int* dispWords = new int[totalWords];
 	
 	/*----Finds the displacement of each word from the start of the file----*/
-	get_Displacement_of_Each_Word(dictionaryFileHandle, dispWords);
+	get_Displacement_of_Each_Word(dispWords);
+	dictionaryFileHandle.clear();
 	dictionaryFileHandle.seekg(0, ios::beg);
 	dictionaryFileHandle.clear();
 	/*----------------------------------------------------------------------*/
@@ -107,8 +110,10 @@ void initializePasswordGenerator_dictionary(const int rank, const int numProcess
 
 
 	/*-----The starting position for each processor is set here-----*/
+	logger->log("Before seek to offset dictionary file position is now " + to_string(dictionaryFileHandle.tellg()));
 	offset = (streampos) dispWords[index];
 	dictionaryFileHandle.seekg(offset);
+	logger->log("After seek to offset dictionary file position is now " + to_string(dictionaryFileHandle.tellg()));
 	/*------------------------------------------------------------*/
 
 

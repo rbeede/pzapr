@@ -24,10 +24,10 @@ std::string getNextPassword_dictionary();
 
 /*This function counts the total number of passwords present in the dictionary
  *and also removes the passwords which are not alphanumeric*/
-int count_Number_Of_Words(std::ifstream &myfile);
+int count_Number_Of_Words();
 
 /*This function calculates the displacement of each word from the start of the dictionary file*/
-void get_Displacement_of_Each_Word(std::ifstream &myfile, int* dispWords);
+void get_Displacement_of_Each_Word(int* dispWords);
 
 
 #endif /* _DICTIONARY_H */

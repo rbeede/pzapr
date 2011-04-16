@@ -205,7 +205,7 @@ int main (const int argc, const char * const argv[]) {
 	logger->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	
 	// Clean up memory and MPI and exit
-	MPI_Request_free(&mpi_request);
+	// seems to cause more errors MPI_Request_free(&mpi_request);
 	delete(logger);
 	delete(GLOBAL_mpiRuntimeInfo);
 	MPI_Finalize();
