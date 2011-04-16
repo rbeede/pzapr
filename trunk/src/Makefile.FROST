@@ -3,11 +3,11 @@
 
 
 all:
-	mpxlC -Wall Gladman/*.cpp *.cpp -o pzapr.bin
-	
-	ls -la --full-time --color
-		
-	
+        mpxlC -DMPICH_IGNORE_CXX_SEEK Gladman/*.cpp *.cpp -o pzapr.bin
+
+        ls -la --full-time --color
+
+
 clean:
-	rm -f *.o
-	rm -f *.bin
+        rm -f *.o
+        rm -f *.bin
