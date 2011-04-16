@@ -97,10 +97,21 @@ int main (const int argc, const char * const argv[]) {
 		if(0x04034b50 != header.fileHeaderSignature) {
 			cerr << "Not a ZIP file!" << endl;
 			return 255;
+		} else {
+			cout << "Fixing little endian to big endian" << endl;
 		}
 		
 		// Now to correct the rest of it
-		
+		header.requiredVersion = FIX_SHORT(header.requiredVersion);
+		header.generalPurposeBitFlag = FIX_SHORT(header.generalPurposeBitFlag);
+		header.compressionMethod = FIX_SHORT(header.compressionMethod);
+		header.lastModifiedFileTime = FIX_SHORT(header.lastModifiedFileTime);
+		header.lastModifiedFileDate = FIX_SHORT(header.lastModifiedFileDate);
+		header.crc32 = FIX_INT(header.crc32);
+		header.compressedSize = FIX_INT(header.compressedSize);
+		header.uncompressedSize = FIX_INT(header.uncompressedSize);
+		header.fileNameLength = FIX_SHORT(header.fileNameLength);
+		header.extraFieldLength = FIX_SHORT(header.extraFieldLength);
 	}
 	
 	
@@ -109,7 +120,7 @@ int main (const int argc, const char * const argv[]) {
 	// Enforce null termination
 	header.fileName[header.fileNameLength] = '\0';
 	
-	// Read in the extra field data
+	// Read in the extra field data (which may need adjusted from LSB to MSB later)
 	zipfileStream.read((char *)(&header.extraField), header.extraFieldLength);
 	
 	cout << "File position is now " << zipfileStream.tellg() << endl;
@@ -148,6 +159,17 @@ int main (const int argc, const char * const argv[]) {
 	if(header.extraFieldLength > 0 && 99 == header.compressionMethod) {  // 99 means AES
 		const AES_ExtraDataField * aesExtraDataField = (AES_ExtraDataField *) &header.extraField;
 		
+		if(!littleEndian) {
+			// Need to adjust the header to big endian
+			aesExtraDataField->headerID = FIX_SHORT(aesExtraDataField->headerID);
+			aesExtraDataField->dataSize = FIX_SHORT(aesExtraDataField->dataSize);
+			aesExtraDataField->zipVendorVersion = FIX_SHORT(aesExtraDataField->zipVendorVersion);
+			// vendorId is a char array so no need to fix
+			// aesEncryptionStrengthMode is only 1 byte so nothing to fix
+			aesExtraDataField->actualCompressionMethod = FIX_SHORT(aesExtraDataField->actualCompressionMethod);
+		}
+		
+		
 		if(0x9901 != aesExtraDataField->headerID) {
 			cerr << "Extra data field is not AES!" << endl;
 			return 255;
@@ -184,10 +206,14 @@ int main (const int argc, const char * const argv[]) {
 		
 		zipfileStream.read((char *)(&salt), saltLengthInBytes);
 		
+		// since salt is an array no need to adjust for little/big endian
+		
 		
 		byte passwordVerification[2];
 		
 		zipfileStream.read((char *)(&passwordVerification), 2);
+		
+		// since passwordVerification is an array no need to adjust for little/big endian
 		
 		// next is encrypted data which has length of header.compressedSize
 		// we don't bother with this
