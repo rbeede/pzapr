@@ -20,7 +20,20 @@ using namespace std;
 
 // don't use unsigned char since the standard doesn't enforce a maximum range on the char type to be 8 bits
 // even though the underlying compiler is probably using unsigned char anyway
-typedef uint8_t byte;  
+typedef uint8_t byte;
+
+
+// http://paulbourke.net/dataformats/endian/
+#define SWAP_2(x) ( (((x) & 0xff) << 8) | ((unsigned short)(x) >> 8) )
+#define SWAP_4(x) ( ((x) << 24) | \
+         (((x) << 8) & 0x00ff0000) | \
+         (((x) >> 8) & 0x0000ff00) | \
+         ((x) >> 24) )
+#define FIX_SHORT(x) (*(unsigned short *)&(x) = SWAP_2(*(unsigned short *)&(x)))
+#define FIX_INT(x)   (*(unsigned int *)&(x)   = SWAP_4(*(unsigned int *)&(x)))
+#define FIX_FLOAT(x) FIX_INT(x)
+
+
 
 
 struct HeaderForFileInZip {
@@ -73,6 +86,23 @@ int main (const int argc, const char * const argv[]) {
 	HeaderForFileInZip header;
 	
 	zipfileStream.read((char*)&header, 30);
+	
+	
+	// Endian check
+	const bool littleEndian = (0x04034b50 == header.fileHeaderSignature);
+	if(!littleEndian) {
+		// Either not a zip file or this architecture is MSB (big endian) so we need to check
+		header.fileHeaderSignature = FIX_SHORT(header.fileHeaderSignature);
+		
+		if(0x04034b50 != header.fileHeaderSignature) {
+			cerr << "Not a ZIP file!" << endl;
+			return 255;
+		}
+		
+		// Now to correct the rest of it
+		
+	}
+	
 	
 	// Read in the filename
 	zipfileStream.read((char *)(&header.fileName), header.fileNameLength);
