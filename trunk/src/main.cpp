@@ -141,8 +141,9 @@ int main (const int argc, const char * const argv[]) {
 	// Loop until we have success, run out of passwords to try, or are told another process found it already
 	bool attemptSuccessful = false;
 	string password;
-	long numberAttempts = 0;
+	long long numberAttempts = 0;
 	while(!attemptSuccessful) {
+		numberAttempts++;
 		password = getNextPassword(isBruteForce);
 
 		// A little progress indicator but not too often to avoid filling up the disk with log entries
@@ -155,12 +156,10 @@ int main (const int argc, const char * const argv[]) {
 			logger->log("Ran out of passwords to try");
 			break;
 		}
-logger->log("DEBUG\t:Trying password " + password);
+
 		attemptSuccessful = attemptPassword(password);  // This calls our decrypt engine to make the attempt
 		
 		if(!attemptSuccessful) {
-			numberAttempts++;
-
 			// Non-blocking check to see if another process has sent a signal that if found the solution :)
 			int receivedFlag = 0;
 			MPI_Test(&mpi_request, &receivedFlag, MPI_STATUS_IGNORE);
@@ -197,6 +196,9 @@ logger->log("DEBUG\t:Trying password " + password);
 		logger->log("This process (" + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + ") didn't find the solution");		
 	}
 		
+		
+	logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " made a total of " + to_string(numberAttempts)
+							+ " attempts");
 	
 	logger->log("Process with rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " completed");
 	

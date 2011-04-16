@@ -3,14 +3,15 @@
 
 extern Logger * logger;
 
-long startRange_ALPHANUMERIC;
-long endRange_ALPHANUMERIC;
-long currPos_ALPHANUMERIC;
+// long long is a hack so a -m32 32-bit build of the code still supports 64-bit ranges of numbers
+long long startRange_ALPHANUMERIC;
+long long endRange_ALPHANUMERIC;
+long long currPos_ALPHANUMERIC;
 
 
 
 void initializePasswordGenerator_brute(const int rank, const int numProcesses) {
-	const long numPossiblePasswords = calculateNumberPossible(NUM_POSS_PW_ALPHABET, MAX_PASSWORD_LENGTH);
+	const long long numPossiblePasswords = calculateNumberPossible(NUM_POSS_PW_ALPHABET, MAX_PASSWORD_LENGTH);
 	logger->log("Number of possible passwords when there are " + to_string(NUM_POSS_PW_ALPHABET) + 
 				" possible character values and passwords of up to " + to_string(MAX_PASSWORD_LENGTH) +
 				" length is " + to_string(numPossiblePasswords));
@@ -53,7 +54,7 @@ std::string getNextPassword_brute() {
 }
 
 
-long calculateNumberPossible(const int possibleCombinations, const int numCharacters) {
+long long calculateNumberPossible(const int possibleCombinations, const int numCharacters) {
 	if(numCharacters <= 0) {
 		return 0;
 	}
@@ -62,7 +63,7 @@ long calculateNumberPossible(const int possibleCombinations, const int numCharac
 }
 
 
-std::string passwordFromRangePosition(const long position) {
+std::string passwordFromRangePosition(const long long position) {
 	// Figure out how long the password must be at the given position
 	int passwordLength = MAX_PASSWORD_LENGTH;  // assume the worst
 	while(calculateNumberPossible(NUM_POSS_PW_ALPHABET, passwordLength) >= position) {
@@ -82,11 +83,11 @@ std::string passwordFromRangePosition(const long position) {
 	}
 
 	for(int j = passwordLength - 1; j >= 0; j--) {
-		long runningTotal = 0;
+		long long runningTotal = 0;
 		for(int i = passwordLength - 1; i > j; i--) {
 			runningTotal += factors[i] * pow(NUM_POSS_PW_ALPHABET, i);
 		}
-		long remainder = position - runningTotal;
+		long long remainder = position - runningTotal;
 	
 		int factor = remainder / pow(NUM_POSS_PW_ALPHABET, j);
 

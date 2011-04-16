@@ -13,7 +13,7 @@
 
 
 all: 
-	mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
+	/opt/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
 	ls -la --full-time --color
 	
 clean:

@@ -36,7 +36,7 @@ const int NUM_POSS_PW_ALPHABET = PASSWORD_ALPHABET_length - 1;  // Exclude null 
  *
  *
 */
-long calculateNumberPossible(const int possibleCombinations, const int numCharacters);
+long long calculateNumberPossible(const int possibleCombinations, const int numCharacters);
 
 
 /**
@@ -96,7 +96,7 @@ std::string getNextPassword_brute();
  *
  *
 */
-std::string passwordFromRangePosition(const long position);
+std::string passwordFromRangePosition(const long long position);
 
 
 #endif /* _ALPHANUMERIC_H */
