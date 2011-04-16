@@ -118,19 +118,15 @@ void initDecryptEngine(const char * const zipFilePathname) {
 
 
 bool attemptPassword(const std::string password) {
+	fcrypt_ctx zcx;
+	unsigned char tmp_buf[2];
 
-	fcrypt_ctx  zcx;
-  unsigned char tmp_buf[2];
-  
-  //find out the value of password verifier with the given password
-  fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, &zcx);	
+	//find out the value of password verifier with the given password
+	fcrypt_init(verifier_data_object.mode, (const unsigned char*)password.c_str(), (unsigned int)password.length(), verifier_data_object.salt, tmp_buf, &zcx);	
 
-  if(memcmp(verifier_data_object.passwordVerification,tmp_buf,2))
-  {
-    return false;	//Password dint match
-  }
-  else
-    return true; //Password matched
-
+	if(memcmp(verifier_data_object.passwordVerification,tmp_buf,2)) {
+		return false;	//Password did not match
+	} else {
+		return true; //Password matched
+	}
 }
-

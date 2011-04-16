@@ -155,7 +155,7 @@ int main (const int argc, const char * const argv[]) {
 			logger->log("Ran out of passwords to try");
 			break;
 		}
-
+logger->log("DEBUG\t:Trying password " + password);
 		attemptSuccessful = attemptPassword(password);  // This calls our decrypt engine to make the attempt
 		
 		if(!attemptSuccessful) {
