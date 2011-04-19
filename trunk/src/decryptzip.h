@@ -43,6 +43,9 @@ struct verifier_data{
         int mode;
         byte salt[16];
         byte passwordVerification[2];
+        byte * fileData;
+        byte authenticationcode[10];
+        int fileDataSize;
 };
 
 void initDecryptEngine(const char * const zipFilePathname);
