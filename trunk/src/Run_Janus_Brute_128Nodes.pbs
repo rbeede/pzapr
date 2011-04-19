@@ -1,0 +1,31 @@
+## Note that you must run in 32-bit mode.  Janus doesn't provide a 32-bit build of OpenMPI so you should have
+##	installed your own in your home folder
+
+#PBS -S /bin/bash
+
+#PBS -l walltime=24:00:00
+#PBS -q default
+
+
+NODE_COUNT=128
+
+TEST_DATA=Test_Data_bruteFirst_0.zip
+
+
+cd /scratch/$USER/
+
+mkdir $PBS_JOBID
+
+cd $PBS_JOBID
+
+mkdir BruteTest${NODE_COUNT}Nodes
+
+cd BruteTest${NODE_COUNT}Nodes
+
+cp ~/pzapr/src/pzapr.bin .
+
+## The test data
+cp ~/pzapr/src/testdata/${TEST_DATA} .
+
+
+~/openmpi-1.4.3_32-bit/bin/mpirun -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID ./${TEST_DATA} BRUTE
