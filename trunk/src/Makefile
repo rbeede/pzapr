@@ -12,6 +12,8 @@
 #	./configure --prefix=/opt/openmpi-1.4.3_32-bit CFLAGS=-m32 CXXFLAGS=-m32 FFLAGS=-m32 FCFLAGS=-m32
 #
 #	You'll need to put /opt/openmpi-1.4.3_32-bit/bin/  in your system path too when you make all
+#
+#	When you run you may get errors about missing libraries unless you use /opt/openmpi-1.4.3_32-bit/bin/mpiexec
 
 
 all: 
