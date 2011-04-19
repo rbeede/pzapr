@@ -181,11 +181,11 @@ bool attemptPassword(const std::string password) {
         memcpy(buffer,&verifier_data_object.fileData[position],len);
         datalength -= len;
         position += len;
-        fcrypt_decrypt(buffer,len,zcx);
+        fcrypt_decrypt(buffer,len,&zcx);
         if(datalength <= 0)
           break;
       }
-      fcrypt_end(tmp_buf2,zcx);
+      fcrypt_end(tmp_buf2,&zcx);
       if(memcmp(verifier_data_object.authenticationcode,tmp_buf2,MAC_LENGTH(verifier_data_object.mode))){
         return false;   //Password matched but not MAC
       }
