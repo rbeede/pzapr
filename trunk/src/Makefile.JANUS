@@ -15,8 +15,9 @@
 #		export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 #		export CPATH=
 #		export LIBPATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/usr/lib:/lib
-#		export PATH=/usr/local/bin:/bin:/usr/bin
+#		export PATH=/usr/local/bin:/bin:/usr/bin:/opt/intel/Compiler/11.1/059/bin/intel64
 #		export DYLD_LIBRARY_PATH=
+#		export CXXFLAGS=
 #
 #	./configure --prefix=/home/USERNAME/openmpi-1.4.3_32-bit --disable-mpi-f77 --disable-mpi-f90 CFLAGS=-m32 CXXFLAGS=-m32
 #
