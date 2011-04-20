@@ -32,7 +32,7 @@
 
 
 all:
-	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
+	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/intel64/
 	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 	
  
