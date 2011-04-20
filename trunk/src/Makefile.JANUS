@@ -20,8 +20,8 @@
 
 
 all:
-	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_LIBRARY_PATH}
-	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_RUN_PATH}
+	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
+	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 	
  
 	~/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin -LLIBDIR
