@@ -12,7 +12,7 @@
 #	SPECIAL NOTE:  You have to clear out ALL OF YOUR PATHS before you compile OpenMPI to flush out 64-bit libraries
 #		export LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 #		export FPATH=
-#		export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
+#		export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 #		export CPATH=
 #		export LIBPATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/usr/lib:/lib
 #		export PATH=/usr/local/bin:/bin:/usr/bin:/opt/intel/Compiler/11.1/059/bin/intel64
@@ -32,7 +32,7 @@
 
 
 all:
-	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/intel64/
+	LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 	
  
