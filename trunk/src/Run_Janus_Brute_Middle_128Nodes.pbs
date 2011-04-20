@@ -34,11 +34,11 @@ cd Middle
 cp ~/pzapr/src/pzapr.bin .
 
 ## The test data
-cp ~/pzapr/src/testdata/${TEST_DATA} .
+cp ~/pzapr/testdata/${TEST_DATA} .
 
 
 ## See Makefile.JANUS for explanation
-export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 export LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_RUN_PATH}
 
 
