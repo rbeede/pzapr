@@ -150,7 +150,7 @@ int main (const int argc, const char * const argv[]) {
 		// A little progress indicator but not too often to avoid filling up the disk with log entries
 		if(numberAttempts % 100000 == 0) {
 			logger->log("Rank " + to_string(GLOBAL_mpiRuntimeInfo->mpi_rank) + " has made " + to_string(numberAttempts)
-							+ " attempts");
+							+ " attempts with the last password tried " + password);
 		}
 		
 		if(password == string("")) {

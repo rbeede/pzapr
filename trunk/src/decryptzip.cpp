@@ -143,7 +143,7 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		
 		// next is encrypted data which has length of header.compressedSize
 		//comprssed size is total of saltLength, password verifier, encrypted data and MAC
-		verifier_data_object.fileDataSize = (int) header.compressedSize;
+		verifier_data_object.fileDataSize = (int) header.compressedSize - (saltLengthInBytes + 2 + MAC_LENGTH(mode));
 		verifier_data_object.fileData = new byte[verifier_data_object.fileDataSize];
 		zipfileStream.read((char *)verifier_data_object.fileData, verifier_data_object.fileDataSize);
 		
@@ -169,22 +169,16 @@ bool attemptPassword(const std::string password) {
 		return false;	//Password did not match
 	} else {
 		// Make sure it isn't a false positive (1 in 65535 chance)
-		byte tmp_buf2[10];
-		int datalength = verifier_data_object.fileDataSize;
-		byte buffer[1024];
-		int position = 0;
-		int len;
-		while(true){
-			len = datalength < 1024 ? datalength : 1024;
-			memcpy(buffer,&verifier_data_object.fileData[position],len);
-			datalength -= len;
-			position += len;
-			fcrypt_decrypt(buffer,len,&zcx);
-			if(datalength <= 0)
-				break;
-		}
-		fcrypt_end(tmp_buf2,&zcx);
-		if(memcmp(verifier_data_object.authenticationcode,tmp_buf2,MAC_LENGTH(verifier_data_object.mode))){
+		
+		// We do this by actually decrypting the file and checking the ZIP AES authentication code to see if it matches
+		//	This is basically a checksum comparison and is pretty fast for small files.  We should only have to do this
+		//	a few times and not for every possible password
+		fcrypt_decrypt(verifier_data_object.fileData, verifier_data_object.fileDataSize, &zcx);
+		byte authCodeFromDecrypt[MAC_LENGTH(verifier_data_object.mode)];
+		fcrypt_end(authCodeFromDecrypt,&zcx);
+
+
+		if(memcmp(verifier_data_object.authenticationcode, authCodeFromDecrypt, MAC_LENGTH(verifier_data_object.mode))){
 			return false;   //Password matched but not MAC
 		} else {
 			return true; //Password matched as well as MAC
