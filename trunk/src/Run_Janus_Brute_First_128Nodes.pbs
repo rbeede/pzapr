@@ -29,8 +29,8 @@ cp ~/pzapr/src/testdata/${TEST_DATA} .
 
 
 ## See Makefile.JANUS for explanation
-export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:$LD_LIBRARY_PATH
-export LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:$LD_RUN_PATH
+export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_LIBRARY_PATH}
+export LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_RUN_PATH}
 
 
 ~/openmpi-1.4.3_32-bit/bin/mpirun -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID ./${TEST_DATA} BRUTE
