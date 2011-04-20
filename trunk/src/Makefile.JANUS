@@ -9,7 +9,18 @@
 #
 #	See http://www.open-mpi.org/community/lists/users/2006/04/0992.php
 #
-#	./configure --prefix=/home/USERNAME/openmpi-1.4.3_32-bit CFLAGS=-m32 CXXFLAGS=-m32 FFLAGS=-m32 FCFLAGS=-m32
+#	SPECIAL NOTE:  You have to clear out ALL OF YOUR PATHS before you compile OpenMPI to flush out 64-bit libraries
+#		export LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
+#		export FPATH=
+#		export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
+#		export CPATH=
+#		export LIBPATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/usr/lib:/lib
+#		export PATH=/usr/local/bin:/bin:/usr/bin
+#		export DYLD_LIBRARY_PATH=
+#
+#	./configure --prefix=/home/USERNAME/openmpi-1.4.3_32-bit --disable-mpi-f77 --disable-mpi-f90 CFLAGS=-m32 CXXFLAGS=-m32
+#
+#	make install
 #
 #	You'll need to put /home/USERNAME/openmpi-1.4.3_32-bit/bin/  in your system path too when you make all
 #
@@ -24,7 +35,7 @@ all:
 	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 	
  
-	~/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
+	~/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin -LLIBDIR
 	
 	ls -la --full-time --color
 	
