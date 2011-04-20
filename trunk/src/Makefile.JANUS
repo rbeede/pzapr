@@ -24,7 +24,7 @@ all:
 	LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib
 	
  
-	~/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin -LLIBDIR
+	~/openmpi-1.4.3_32-bit/bin/mpicxx -m32 -Wall Gladman/*.cpp *.cpp -o pzapr.bin
 	
 	ls -la --full-time --color
 	
