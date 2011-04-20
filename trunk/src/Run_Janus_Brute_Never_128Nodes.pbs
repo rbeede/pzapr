@@ -14,7 +14,7 @@
 
 NODE_COUNT=128
 
-TEST_DATA=Test_Data_bruteFirst_0.zip
+TEST_DATA=Test_Data_brute_Never_impo$$ible.zip
 
 
 cd /scratch/$USER/
@@ -27,14 +27,14 @@ mkdir BruteTest${NODE_COUNT}Nodes
 
 cd BruteTest${NODE_COUNT}Nodes
 
-mkdir First
+mkdir Never
 
-cd First
+cd Never
 
 cp ~/pzapr/src/pzapr.bin .
 
 ## The test data
-cp ~/pzapr/src/testdata/${TEST_DATA} .
+cp "~/pzapr/src/testdata/${TEST_DATA}" .
 
 
 ## See Makefile.JANUS for explanation
@@ -42,4 +42,4 @@ export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_LIBRARY_PATH}
 export LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_RUN_PATH}
 
 
-~/openmpi-1.4.3_32-bit/bin/mpirun -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID ./${TEST_DATA} BRUTE
+~/openmpi-1.4.3_32-bit/bin/mpirun -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" BRUTE
