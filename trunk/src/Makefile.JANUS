@@ -23,8 +23,6 @@
 #
 #	make install
 #
-#	You'll need to put /home/USERNAME/openmpi-1.4.3_32-bit/bin/  in your system path too when you make all
-#
 #	When you run you may get errors about missing libraries unless you use /home/USERNAME/openmpi-1.4.3_32-bit/bin/mpirun
 #
 # THIS MAKEFILE ASSUMES YOU HAVE A CUSTOM OPENMPI THAT NEEDS SPECIAL LIBRARY FLAGS TOO FOR LIBDIR
