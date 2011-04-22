@@ -43,9 +43,9 @@ cp "/home/rbeede/pzapr/testdata/${TEST_DATA}" .
 #PBS -v LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
-#PBS -v PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin
-export PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin
-PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin
+#PBS -v PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/sbin
+export PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/sbin
+PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/sbin
 
 
 /home/rbeede/openmpi-1.4.3_32-bit/bin/orterun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
