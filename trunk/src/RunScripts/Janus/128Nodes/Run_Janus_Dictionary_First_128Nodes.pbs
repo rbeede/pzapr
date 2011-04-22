@@ -39,7 +39,11 @@ cp "~/pzapr/testdata/${TEST_DATA}" .
 
 
 ## See Makefile.JANUS for explanation
-LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
+export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
 
+echo Env Is
+echo ================================
+env
+echo ================================
 
 ~/openmpi-1.4.3_32-bit/bin/mpirun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
