@@ -1,0 +1,46 @@
+## Note that you must run in 32-bit mode.  Janus doesn't provide a 32-bit build of OpenMPI so you should have
+##	installed your own in your home folder
+
+#PBS -S /bin/bash
+##	Janus has 1368 nodes total each holding two 6-core chips ==> 12 cores / node
+#PBS -l nodes=11
+#PBS -l walltime=24:00:00
+#PBS -q default
+
+##          You should also specify the email address to which the
+##          message should be send via the -M option.
+
+#PBS -m abe
+
+
+NODE_COUNT=1024
+
+TEST_DATA=Test_Data_dictNever_4spaces.zip
+
+
+cd /scratch/$USER/
+
+mkdir $PBS_JOBID
+
+cd $PBS_JOBID
+
+mkdir DictionaryTest${NODE_COUNT}Nodes
+
+cd DictionaryTest${NODE_COUNT}Nodes
+
+mkdir Never
+
+cd Never
+
+cp ~/pzapr/src/pzapr.bin .
+
+## The test data
+cp "~/pzapr/testdata/${TEST_DATA}" .
+
+
+## See Makefile.JANUS for explanation
+export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
+export LD_RUN_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:${LD_RUN_PATH}
+
+
+~/openmpi-1.4.3_32-bit/bin/mpirun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
