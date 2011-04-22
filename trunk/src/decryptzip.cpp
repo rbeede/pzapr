@@ -48,9 +48,12 @@ void initDecryptEngine(const char * const zipFilePathname) {
 	const streampos zipfileByteSize = zipfileStream.tellg();
 	
 	zipfileStream.seekg(0, ios_base::beg);
+	
 		
 	if(zipfileStream.fail()) {
 		logger->log("FATAL ERROR:  Failed to rewind zip file stream!");
+		MPI_Abort( MPI_COMM_WORLD, 255 );
+		exit(255);
 	}
 	
 	/* Note that zip files store values in LSB order */
@@ -69,6 +72,8 @@ void initDecryptEngine(const char * const zipFilePathname) {
 		
 		if(0x04034b50 != header.fileHeaderSignature) {
 			logger->log("Not a ZIP file!");
+			MPI_Abort( MPI_COMM_WORLD, 255 );
+			exit(255);
 			return;
 		} else {
 			logger->log("Fixing little endian to big endian");
