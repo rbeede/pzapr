@@ -1,0 +1,4 @@
+2011-04-22_22:02:27 +00:00  Number of possible passwords when there are 62 possible character values and passwords of up to 7 length is 3579345993194
+2011-04-22_22:02:27 +00:00  Process 0 is doing brute password range of 1 to 3579345993194
+2011-04-22_22:02:27 +00:00  Password length was 4	Factors (in char order):	4, 12, 9, 2, 
+2011-04-22_22:02:27 +00:00  Password at position 1,000,000 is 3B81
