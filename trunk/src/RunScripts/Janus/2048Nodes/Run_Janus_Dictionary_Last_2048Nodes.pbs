@@ -3,7 +3,7 @@
 
 #PBS -S /bin/bash
 ##	Janus has 1368 nodes total each holding two 6-core chips ==> 12 cores / node
-#PBS -l nodes=11
+#PBS -l nodes=171
 #PBS -l walltime=24:00:00
 #PBS -q default
 
@@ -13,7 +13,7 @@
 #PBS -m abe
 
 
-NODE_COUNT=4096
+NODE_COUNT=2048
 
 TEST_DATA=Test_Data_dictLast_~~~~~~~~~~~~~~~~~~~~.zip
 

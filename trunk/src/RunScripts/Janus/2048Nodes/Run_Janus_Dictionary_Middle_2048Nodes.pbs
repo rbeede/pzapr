@@ -3,7 +3,7 @@
 
 #PBS -S /bin/bash
 ##	Janus has 1368 nodes total each holding two 6-core chips ==> 12 cores / node
-#PBS -l nodes=11
+#PBS -l nodes=171
 #PBS -l walltime=24:00:00
 #PBS -q default
 
@@ -15,7 +15,7 @@
 
 NODE_COUNT=2048
 
-TEST_DATA=Test_Data_dictFirst_$.zip
+TEST_DATA=Test_Data_dictMiddle_Rem0n$tr4t10n.zip
 
 
 cd /scratch/$USER/
@@ -28,9 +28,9 @@ mkdir DictionaryTest${NODE_COUNT}Nodes
 
 cd DictionaryTest${NODE_COUNT}Nodes
 
-mkdir First
+mkdir Middle
 
-cd First
+cd Middle
 
 cp /home/rbeede/pzapr/src/pzapr.bin .
 
