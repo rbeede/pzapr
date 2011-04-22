@@ -15,7 +15,7 @@
 
 NODE_COUNT=4096
 
-TEST_DATA=Test_Data_brute_Never_impo$$ible.zip
+TEST_DATA=Test_Data_brute_Never_impo\$\$ible.zip
 
 
 cd /scratch/$USER/
@@ -35,7 +35,7 @@ cd Never
 cp /home/rbeede/pzapr/src/pzapr.bin .
 
 ## The test data
-cp "/home/rbeede/pzapr/testdata/${TEST_DATA}" .
+cp /home/rbeede/pzapr/testdata/${TEST_DATA} .
 
 
 ## See We must point to the same 32-bit compiler and OpenMPI setup, see Makefile.JANUS
@@ -48,4 +48,4 @@ export PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/
 PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/sbin
 
 
-/home/rbeede/openmpi-1.4.3_32-bit/bin/orterun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" BRUTE
+/home/rbeede/openmpi-1.4.3_32-bit/bin/orterun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID ./${TEST_DATA} BRUTE
