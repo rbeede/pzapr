@@ -35,7 +35,7 @@ cd First
 cp ~/pzapr/src/pzapr.bin .
 
 ## The test data
-cp "~/pzapr/testdata/${TEST_DATA}" .
+cp "/home/rbeede/pzapr/testdata/${TEST_DATA}" .
 
 
 ## See We must point to the same 32-bit compiler and OpenMPI setup, see Makefile.JANUS
