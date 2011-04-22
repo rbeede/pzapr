@@ -48,4 +48,4 @@ export PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin
 PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin
 
 
-/home/rbeede/openmpi-1.4.3_32-bit/bin/mpirun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
+/home/rbeede/openmpi-1.4.3_32-bit/bin/orterun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
