@@ -26,6 +26,8 @@
 #include "Gladman/rijndael.h"
 #include "Gladman/fileenc.h"
 
+#include "mpi.h"
+
 typedef uint8_t byte;  
 
 // http://paulbourke.net/dataformats/endian/
