@@ -38,12 +38,9 @@ cp ~/pzapr/src/pzapr.bin .
 cp "~/pzapr/testdata/${TEST_DATA}" .
 
 
-## See Makefile.JANUS for explanation
-export LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
+## See We must point to the same 32-bit compiler and OpenMPI setup, see Makefile.JANUS
+##Define an environment variable
+#PBS -v LD_LIBRARY_PATH="/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32"
 
-echo Env Is
-echo ================================
-env
-echo ================================
 
 ~/openmpi-1.4.3_32-bit/bin/mpirun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID "./${TEST_DATA}" DICTIONARY /scratch/$USER/Dictionary.txt
