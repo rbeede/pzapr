@@ -48,4 +48,9 @@ export PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/
 PATH=/home/rbeede/openmpi-1.4.3_32-bit/bin:/bin:/usr/bin:/usr/local/bin:/sbin
 
 
+ls -l ./
+
+ls -l ./pzapr.bin
+
+
 /home/rbeede/openmpi-1.4.3_32-bit/bin/orterun --hostfile $PBS_NODEFILE -np ${NODE_COUNT} ./pzapr.bin RUNLOG_$PBS_JOBID ./${TEST_DATA} BRUTE
