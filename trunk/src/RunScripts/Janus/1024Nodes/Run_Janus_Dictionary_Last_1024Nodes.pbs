@@ -15,7 +15,7 @@
 
 NODE_COUNT=1024
 
-TEST_DATA=Test_Data_dictLast_~~~~~~~~~~~~~~~~~~~~.zip
+TEST_DATA=Test_Data_dictLast_Zuraten5.zip
 
 
 cd /scratch/$USER/
@@ -36,6 +36,13 @@ cp /home/rbeede/pzapr/src/pzapr.bin .
 
 ## The test data
 cp "/home/rbeede/pzapr/testdata/${TEST_DATA}" .
+
+
+
+## Let the remote file system catch up
+sync
+sleep 3
+sync
 
 
 ## See We must point to the same 32-bit compiler and OpenMPI setup, see Makefile.JANUS
