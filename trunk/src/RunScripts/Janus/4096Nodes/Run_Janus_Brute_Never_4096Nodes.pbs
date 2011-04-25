@@ -38,6 +38,13 @@ cp /home/rbeede/pzapr/src/pzapr.bin .
 cp /home/rbeede/pzapr/testdata/${TEST_DATA} .
 
 
+## Last ditch effort to get remote file system /scratch to sync for all nodes to avoid missing pzapr.bin error
+sync
+sleep 3
+sync
+
+
+
 ## See We must point to the same 32-bit compiler and OpenMPI setup, see Makefile.JANUS
 ##Define an environment variable
 #PBS -v LD_LIBRARY_PATH=/home/rbeede/openmpi-1.4.3_32-bit/lib:/opt/intel/Compiler/11.1/059/lib/ia32
