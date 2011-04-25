@@ -15,7 +15,7 @@
 
 NODE_COUNT=4096
 
-TEST_DATA=Test_Data_dictMiddle_Rem0n$tr4t10n.zip
+TEST_DATA=Test_Data_dictMiddle_encarrillar8.zip
 
 
 cd /scratch/$USER/
