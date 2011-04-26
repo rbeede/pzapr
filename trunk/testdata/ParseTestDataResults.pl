@@ -57,8 +57,9 @@ sub processLog {
 	
 	
 	# First line has total number of processes
-	$lines[0] =~ m/rank \d+ of (\d+)/;
-	my $numberProcesses = $1;
+	$lines[0] =~ m/rank (\d+) of (\d+)/;
+	my $thisProcessRank = $1;
+	my $numberProcesses = $2;
 	
 	# Line 4 has the test data info and position (first, middle, last, never)
 	$lines[3] =~ m/argv\[2\] == .\/Test_Data_([^_]*)_.*.zip/;
@@ -116,16 +117,15 @@ sub processLog {
 	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{MIN})) {
 		$results{$numberProcesses}{$testType}{$testPosition}{MIN} = 0;
 	}
-	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{AVG})) {
-		$results{$numberProcesses}{$testType}{$testPosition}{AVG} = 0;
-	}
 	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES})) {
 		$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES} = 0;
 	}
 	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED})) {
 		$results{$numberProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED} = "true";
 	}
-	
+	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_PER_SECOND_ALL_NODES})) {
+		$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_PER_SECOND_ALL_NODES} = 0;
+	}
 	
 	if($results{$numberProcesses}{$testType}{$testPosition}{MAX} < $attemptsPerSecond) {
 		$results{$numberProcesses}{$testType}{$testPosition}{MAX} = $attemptsPerSecond;
@@ -134,16 +134,16 @@ sub processLog {
 		$results{$numberProcesses}{$testType}{$testPosition}{MIN} = $attemptsPerSecond;
 	}
 	
-	$results{$numberProcesses}{$testType}{$testPosition}{AVG} = $results{$numberProcesses}{$testType}{$testPosition}{AVG} + $attemptsPerSecond;
-	$results{$numberProcesses}{$testType}{$testPosition}{AVG} = $results{$numberProcesses}{$testType}{$testPosition}{AVG} / 2;
-
+	# We can calculate the average later by dividing this by the number of nodes
+	$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_PER_SECOND_ALL_NODES} += $attemptsPerSecond;
+	
 	if($results{$numberProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED} eq "true" && $processFinished eq "false") {
 		$results{$numberProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED} = $processFinished;
 	} else {
 		$results{$numberProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED} = $processFinished;
 	}
 	
-	$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES} += $attemptsPerSecond;
+	$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_COMBINED_ALL_NODES} += $totalAttempts;
 }
 
 
@@ -159,7 +159,7 @@ sub datestampToEpoch {
 
 
 sub outputResults {
-	print "Number Processes" . "," . "Test Type" . "," . "Test Position" . "Maximum Attempts Per Second for 1 Process" . "," . "Minimum Attempts Per Second for 1 Process" . "," . "Average Attempts Per Second for 1 Node" . "," . "All Processes Finished" . "," . "Total Number Attempts for All Nodes" . "\n";
+	print "Number Processes" . "," . "Test Type" . "," . "Test Position" . "," . "Maximum Attempts Per Second for 1 Process" . "," . "Minimum Attempts Per Second for 1 Process" . "," . "Average Attempts Per Second for 1 Node" . "," . "All Processes Finished" . "," . "Total Number Attempts for All Nodes Combined" . "\n";
 	
 	foreach my $numProcesses (sort keys %results) {
 		foreach my $testType (sort keys %{$results{$numProcesses}}) {
@@ -175,11 +175,11 @@ sub outputResults {
 				print ",";
 				print $results{$numProcesses}{$testType}{$testPosition}{MIN};
 				print ",";
-				print $results{$numProcesses}{$testType}{$testPosition}{AVG};
+				print $results{$numProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_PER_SECOND_ALL_NODES} / $numProcesses;
 				print ",";
 				print $results{$numProcesses}{$testType}{$testPosition}{ALL_PROCESSES_FINISHED};
 				print ",";
-				print $results{$numProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES};
+				print $results{$numProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_COMBINED_ALL_NODES};
 
 				print "\n";
 			}
