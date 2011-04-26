@@ -16,7 +16,7 @@ use warnings "all";;
 use File::Find;
 use Time::Local;
 use List::Util;
-
+use Cwd;
 
 
 # Global vars
@@ -27,12 +27,13 @@ my %results;
 main();  # for scoping
 
 sub main {
-	my $baseDir = $ARGV[0];
+	my $baseDir = Cwd::abs_path($ARGV[0]);
 
 	unless(defined($baseDir) && -d $baseDir) {
 		die("Directory $baseDir doesn't exist!\n\n");
 	}
 
+	print STDERR "Searching $baseDir\n";
 
 	File::Find::find(\&processLog, ($baseDir));
 	
@@ -43,8 +44,8 @@ sub main {
 
 sub processLog {
 	my $fullPathname = $File::Find::name;
-	
-	if(! -f $fullPathname || $fullPathname !~ m/\.log$/i) {
+
+	if((! (-f $fullPathname)) || $fullPathname !~ /\.log$/i) {
 		return;  # not a log to parse
 	}
 
