@@ -71,7 +71,7 @@ sub processLog {
 		$testPosition = "MIDDLE";
 	} elsif(index($testPosition, "LAST") != -1) {
 		$testPosition = "LAST";
-	} elsif(index($testPosition, "NEVER") != -1) {
+	} elsif(index(uc($lines[3]), "NEVER") != -1) {  # special work around for "brute_Never"
 		$testPosition = "NEVER";
 	} else {
 		$testPosition = "UNKNOWN - " . $testPosition;
