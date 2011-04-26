@@ -115,7 +115,7 @@ sub processLog {
 		$results{$numberProcesses}{$testType}{$testPosition}{MAX} = 0;
 	}
 	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{MIN})) {
-		$results{$numberProcesses}{$testType}{$testPosition}{MIN} = 0;
+		$results{$numberProcesses}{$testType}{$testPosition}{MIN} = 4294967296;
 	}
 	if(!defined($results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES})) {
 		$results{$numberProcesses}{$testType}{$testPosition}{TOTAL_ATTEMPTS_ALL_NODES} = 0;
