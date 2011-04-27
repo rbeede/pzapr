@@ -62,7 +62,7 @@ sub processLog {
 	my $numberProcesses = $2;
 	
 	# Line 4 has the test data info and position (first, middle, last, never)
-	$lines[3] =~ m/argv\[2\] == .\/Test_Data_([^_]*)_.*.zip/;
+	$lines[3] =~ m/Test_Data_([^_]*)_.*.zip/;
 	my $testPosition = $1;
 	$testPosition = uc($testPosition);
 	if(index($testPosition, "FIRST") != -1) {
